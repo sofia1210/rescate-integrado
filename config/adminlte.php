@@ -339,6 +339,11 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
+            'text' => 'animals',
+            'url' => 'admin/animals',
+            'icon' => 'fas fa-fw fa-paw',
+        ],
+        [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
