@@ -327,6 +327,8 @@ return [
             'label' => 4,
             'label_color' => 'success',
         ],
+        
+        
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
@@ -354,9 +356,19 @@ return [
             'icon' => 'fas fa-fw fa-paw',
         ],
         [
-            'text' => 'animals',
+            'text' => 'animales',
             'url' => 'animals',
             'icon' => 'fas fa-fw fa-paw',
+        ],
+        [
+            'text' => 'centros',
+            'url' => 'centers',
+            'icon' => 'fas fa-fw fa-building',
+        ],
+        [
+            'text' => 'Reportes',
+            'url' => 'reports',
+            'icon' => 'fas fa-fw fa-file-alt',
         ],
         [
             'text' => 'multilevel',
