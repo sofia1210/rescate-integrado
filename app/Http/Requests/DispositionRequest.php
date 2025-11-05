@@ -22,7 +22,10 @@ class DispositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'tipo' => 'required|string',
+            'tipo' => 'required|string|in:traslado,adopcion,liberacion',
+            'center_id' => 'nullable|integer',
+            'latitud' => 'required|numeric|between:-90,90',
+            'longitud' => 'nullable|numeric|between:-180,180', // eliminado (se completa desde el mapa)
         ];
     }
 }

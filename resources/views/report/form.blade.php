@@ -1,6 +1,5 @@
 <div class="row padding-1 p-1">
     <div class="col-md-12">
-        
         <div class="form-group mb-2 mb20">
             <label for="reporte_id" class="form-label">{{ __('Reporte Id') }}</label>
             <input type="text" name="reporte_id" class="form-control @error('reporte_id') is-invalid @enderror" value="{{ old('reporte_id', $report?->reporte_id) }}" id="reporte_id" placeholder="Reporte Id">
@@ -20,20 +19,31 @@
 
         <div class="form-group mb-2 mb20">
             <label for="longitud" class="form-label">{{ __('Longitud') }}</label>
-            <input type="text" name="longitud" class="form-control @error('longitud') is-invalid @enderror" id="longitud" value="{{ old('longitud', $report?->longitud) }}" placeholder="Longitud">
+            <input type="number" step="0.000001" name="longitud" class="form-control @error('longitud') is-invalid @enderror" id="longitud" value="{{ old('longitud', $report?->longitud) }}" placeholder="Longitud">
             {!! $errors->first('longitud', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
         <div class="form-group mb-2 mb20">
             <label for="latitud" class="form-label">{{ __('Latitud') }}</label>
-            <input type="text" name="latitud" class="form-control @error('latitud') is-invalid @enderror" id="latitud" value="{{ old('latitud', $report?->latitud) }}" placeholder="Latitud">
+            <input type="number" step="0.000001" name="latitud" class="form-control @error('latitud') is-invalid @enderror" id="latitud" value="{{ old('latitud', $report?->latitud) }}" placeholder="Latitud">
             {!! $errors->first('latitud', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+
+        <div class="form-group mb-2 mb20">
+            <label class="form-label">{{ __('Ubicación') }}</label>
+            <div id="report-map" style="height: 320px;"></div>
+            <input type="hidden" name="latitud" id="latitud" value="{{ old('latitud', $report?->latitud) }}">
+            <input type="hidden" name="longitud" id="longitud" value="{{ old('longitud', $report?->longitud) }}">
+            <small id="coordsHelp" class="text-muted">
+                {{ __('Haz click en el mapa para seleccionar la ubicación (lat/lng).') }}
+            </small>
+            {!! $errors->first('latitud', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
+            {!! $errors->first('longitud', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
         <div class="form-group mb-2 mb20">
             <label for="direccion" class="form-label">{{ __('Direccion') }}</label>
             <input type="text" name="direccion" class="form-control @error('direccion') is-invalid @enderror" id="direccion" value="{{ old('direccion', $report?->direccion) }}" placeholder="Direccion">
-            {!! $errors->first('direccion', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
         <div class="form-group mb-2 mb20">
@@ -51,7 +61,6 @@
         <div class="form-group mb-2 mb20">
             <label for="detalle_aprobado" class="form-label">{{ __('Detalle Aprobado') }}</label>
             <input type="text" name="detalle_aprobado" class="form-control @error('detalle_aprobado') is-invalid @enderror" id="detalle_aprobado" value="{{ old('detalle_aprobado', $report?->detalle_aprobado) }}" placeholder="Detalle Aprobado">
-            {!! $errors->first('detalle_aprobado', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
         <div class="form-group mb-2 mb20">
@@ -65,9 +74,46 @@
             <input type="date" name="fecha_actualizacion" class="form-control @error('fecha_actualizacion') is-invalid @enderror" id="fecha_actualizacion" value="{{ old('fecha_actualizacion', $report?->fecha_actualizacion?->format('Y-m-d')) }}">
             {!! $errors->first('fecha_actualizacion', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-
     </div>
     <div class="col-md-12 mt20 mt-2">
         <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
     </div>
 </div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const latInput = document.getElementById('latitud');
+    const lngInput = document.getElementById('longitud');
+    const coordsHelp = document.getElementById('coordsHelp');
+
+    const initialLat = parseFloat(latInput.value || '');
+    const initialLng = parseFloat(lngInput.value || '');
+    const hasInitial = !isNaN(initialLat) && !isNaN(initialLng);
+
+    const map = L.map('report-map');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    map.setView(hasInitial ? [initialLat, initialLng] : [0, 0], hasInitial ? 14 : 2);
+
+    let marker = null;
+    if (hasInitial) {
+        marker = L.marker([initialLat, initialLng]).addTo(map);
+        coordsHelp.textContent = `Lat: ${initialLat.toFixed(6)}, Lng: ${initialLng.toFixed(6)}`;
+    }
+
+    map.on('click', function (e) {
+        const { lat, lng } = e.latlng;
+        latInput.value = lat.toFixed(6);
+        lngInput.value = lng.toFixed(6);
+        coordsHelp.textContent = `Lat: ${latInput.value}, Lng: ${lngInput.value}`;
+        if (marker) {
+            marker.setLatLng([lat, lng]);
+        } else {
+            marker = L.marker([lat, lng]).addTo(map);
+        }
+    });
+});
+</script>

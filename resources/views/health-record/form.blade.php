@@ -3,7 +3,15 @@
         
         <div class="form-group mb-2 mb20">
             <label for="tipo" class="form-label">{{ __('Tipo') }}</label>
-            <input type="text" name="tipo" class="form-control @error('tipo') is-invalid @enderror" value="{{ old('tipo', $healthRecord?->tipo) }}" id="tipo" placeholder="Tipo">
+            <select name="tipo" id="tipo" class="form-control @error('tipo') is-invalid @enderror">
+                @php
+                    $options = ['evaluacion' => 'Evaluación', 'tratamiento' => 'Tratamiento', 'cuidado' => 'Cuidado'];
+                    $current = old('tipo', $healthRecord?->tipo);
+                @endphp
+                @foreach($options as $value => $label)
+                    <option value="{{ $value }}" {{ $current === $value ? 'selected' : '' }}>{{ $label }}</option>
+                @endforeach
+            </select>
             {!! $errors->first('tipo', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
@@ -18,7 +26,7 @@
         </div>
         <div class="form-group mb-2 mb20">
             <label for="fecha_revision" class="form-label">{{ __('Fecha Revision') }}</label>
-            <input type="text" name="fecha_revision" class="form-control @error('fecha_revision') is-invalid @enderror" value="{{ old('fecha_revision', $healthRecord?->fecha_revision) }}" id="fecha_revision" placeholder="Fecha Revision">
+            <input type="date" name="fecha_revision" class="form-control @error('fecha_revision') is-invalid @enderror" value="{{ old('fecha_revision', optional($healthRecord?->fecha_revision)->format('Y-m-d')) }}" id="fecha_revision">
             {!! $errors->first('fecha_revision', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 

@@ -10,7 +10,7 @@ use App\Http\Controllers\HealthRecordController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return redirect('animals');
+    return redirect('login'); // pantalla inicial: login
 });
 
 Auth::routes();
@@ -19,7 +19,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::resource('centers', CenterController::class);
 
-Route::resource('animals', AnimalController::class);
+Route::resource('animals', AnimalController::class)->middleware('auth'); // proteger animales
 
 Route::resource('animal-profiles', AnimalProfileController::class);
 
