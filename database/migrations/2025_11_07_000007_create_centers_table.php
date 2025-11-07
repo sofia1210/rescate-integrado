@@ -11,12 +11,10 @@ return new class extends Migration
         Schema::create('centers', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->integer('telefono')->nullable();
-            $table->float('longitud')->nullable();
-            $table->float('latitud')->nullable();
             $table->string('direccion')->nullable();
-            $table->integer('capacidad_maxima')->nullable();
-            $table->date('fecha_creacion')->nullable();
+            $table->decimal('latitud', 10, 7)->nullable();
+            $table->decimal('longitud', 10, 7)->nullable();
+            $table->string('contacto')->nullable();
             $table->timestamps();
         });
     }
@@ -26,3 +24,5 @@ return new class extends Migration
         Schema::dropIfExists('centers');
     }
 };
+
+
