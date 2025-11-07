@@ -36,15 +36,16 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >Nombre</th>
-									<th >Tipo</th>
-									<th >Tipo Id</th>
-									<th >Reporte Id</th>
-									<th >Especie Id</th>
-									<th >Raza Id</th>
-									<th >Estado Id</th>
-									<th >Adopcion Id</th>
-									<th >Liberacion Id</th>
+                                    <th >Nombre</th>
+                                    <th >Sexo</th>
+                                    <th >Tipo</th>
+                                    <th >Reporte</th>
+                                    <th >Especie</th>
+                                    <th >Imagen</th>
+                                    <th >Raza</th>
+                                    <th >Estado</th>
+                                    <th >Adopción</th>
+                                    <th >Liberación</th>
 
                                         <th></th>
                                     </tr>
@@ -54,15 +55,20 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $animalFile->nombre }}</td>
-										<td >{{ $animalFile->tipo }}</td>
-										<td >{{ $animalFile->tipo_id }}</td>
-										<td >{{ $animalFile->reporte_id }}</td>
-										<td >{{ $animalFile->especie_id }}</td>
-										<td >{{ $animalFile->raza_id }}</td>
-										<td >{{ $animalFile->estado_id }}</td>
-										<td >{{ $animalFile->adopcion_id }}</td>
-										<td >{{ $animalFile->liberacion_id }}</td>
+                                            <td >{{ $animalFile->nombre }}</td>
+                                            <td >{{ $animalFile->sexo }}</td>
+                                            <td >{{ $animalFile->animalType?->nombre }}</td>
+                                            <td >{{ $animalFile->reporte_id ? '#' . $animalFile->reporte_id : '' }}</td>
+                                            <td >{{ $animalFile->species?->nombre }}</td>
+                                            <td >
+                                                @if($animalFile->imagen_url)
+                                                    <img src="{{ asset('storage/' . $animalFile->imagen_url) }}" alt="img" style="height:50px; width:auto;"/>
+                                                @endif
+                                            </td>
+                                            <td >{{ $animalFile->breed?->nombre }}</td>
+                                            <td >{{ $animalFile->animalStatus?->nombre }}</td>
+                                            <td >{{ $animalFile->adopcion_id ? '#' . $animalFile->adopcion_id : '' }}</td>
+                                            <td >{{ $animalFile->liberacion_id ? '#' . $animalFile->liberacion_id : '' }}</td>
 
                                             <td>
                                                 <form action="{{ route('animal-files.destroy', $animalFile->id) }}" method="POST">

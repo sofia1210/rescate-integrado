@@ -7,15 +7,48 @@
             {!! $errors->first('nombre', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
-            <label for="permite_adopcion" class="form-label">{{ __('Permite Adopcion') }}</label>
-            <input type="text" name="permite_adopcion" class="form-control @error('permite_adopcion') is-invalid @enderror" value="{{ old('permite_adopcion', $animalType?->permite_adopcion) }}" id="permite_adopcion" placeholder="Permite Adopcion">
-            {!! $errors->first('permite_adopcion', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+            <label class="form-label d-block">{{ __('Permite Adopción') }}</label>
+            <input type="hidden" name="permite_adopcion" value="0">
+            <div class="icheck-primary d-inline mr-3">
+                @php($adop = old('permite_adopcion', $animalType?->permite_adopcion))
+                <input type="radio" id="permite_adopcion_si" name="permite_adopcion" value="1" {{ (string)$adop === '1' ? 'checked' : '' }}>
+                <label for="permite_adopcion_si">Sí</label>
+            </div>
+            <div class="icheck-primary d-inline">
+                <input type="radio" id="permite_adopcion_no" name="permite_adopcion" value="0" {{ (string)$adop === '0' ? 'checked' : '' }}>
+                <label for="permite_adopcion_no">No</label>
+            </div>
+            {!! $errors->first('permite_adopcion', '<div class="text-danger small" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
-            <label for="permite_liberacion" class="form-label">{{ __('Permite Liberacion') }}</label>
-            <input type="text" name="permite_liberacion" class="form-control @error('permite_liberacion') is-invalid @enderror" value="{{ old('permite_liberacion', $animalType?->permite_liberacion) }}" id="permite_liberacion" placeholder="Permite Liberacion">
-            {!! $errors->first('permite_liberacion', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+            <label class="form-label d-block">{{ __('Permite Liberación') }}</label>
+            <input type="hidden" name="permite_liberacion" value="0">
+            <div class="icheck-primary d-inline mr-3">
+                @php($lib = old('permite_liberacion', $animalType?->permite_liberacion))
+                <input type="radio" id="permite_liberacion_si" name="permite_liberacion" value="1" {{ (string)$lib === '1' ? 'checked' : '' }}>
+                <label for="permite_liberacion_si">Sí</label>
+            </div>
+            <div class="icheck-primary d-inline">
+                <input type="radio" id="permite_liberacion_no" name="permite_liberacion" value="0" {{ (string)$lib === '0' ? 'checked' : '' }}>
+                <label for="permite_liberacion_no">No</label>
+            </div>
+            {!! $errors->first('permite_liberacion', '<div class="text-danger small" role="alert"><strong>:message</strong></div>') !!}
         </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const adopSi = document.getElementById('permite_adopcion_si');
+            const adopNo = document.getElementById('permite_adopcion_no');
+            const libSi = document.getElementById('permite_liberacion_si');
+            const libNo = document.getElementById('permite_liberacion_no');
+
+            function syncRadios() {
+                if (adopSi.checked) { libNo.checked = true; }
+                if (libSi.checked) { adopNo.checked = true; }
+            }
+            adopSi?.addEventListener('change', syncRadios);
+            libSi?.addEventListener('change', syncRadios);
+        });
+        </script>
 
     </div>
     <div class="col-md-12 mt20 mt-2">

@@ -23,8 +23,7 @@ class PersonRequest extends FormRequest
     {
         return [
 			'nombre' => 'required|string',
-			'apellido' => 'required|string',
-			'ci' => 'string',
+			'ci' => 'required|string',
 			'telefono' => 'string',
 			'es_cuidador' => 'required|boolean',
         ];

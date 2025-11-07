@@ -24,6 +24,7 @@ class MedicalEvaluationRequest extends FormRequest
         return [
 			'tratamiento_id' => 'required',
 			'descripcion' => 'string',
+            'fecha' => 'nullable|date',
 			'veterinario_id' => 'required',
         ];
     }

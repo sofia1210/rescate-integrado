@@ -29,10 +29,6 @@
                                     {{ $person->nombre }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
-                                    <strong>Apellido:</strong>
-                                    {{ $person->apellido }}
-                                </div>
-                                <div class="form-group mb-2 mb20">
                                     <strong>Ci:</strong>
                                     {{ $person->ci }}
                                 </div>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transfer;
+use App\Models\Rescuer;
+use App\Models\Center;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\TransferRequest;
@@ -16,7 +18,7 @@ class TransferController extends Controller
      */
     public function index(Request $request): View
     {
-        $transfers = Transfer::paginate();
+        $transfers = Transfer::with(['rescuer.person','center'])->paginate();
 
         return view('transfer.index', compact('transfers'))
             ->with('i', ($request->input('page', 1) - 1) * $transfers->perPage());
@@ -28,8 +30,9 @@ class TransferController extends Controller
     public function create(): View
     {
         $transfer = new Transfer();
-
-        return view('transfer.create', compact('transfer'));
+        $rescuers = Rescuer::with('person')->orderBy('id')->get();
+        $centers = Center::orderBy('nombre')->get(['id','nombre']);
+        return view('transfer.create', compact('transfer','rescuers','centers'));
     }
 
     /**
@@ -59,8 +62,9 @@ class TransferController extends Controller
     public function edit($id): View
     {
         $transfer = Transfer::find($id);
-
-        return view('transfer.edit', compact('transfer'));
+        $rescuers = Rescuer::with('person')->orderBy('id')->get();
+        $centers = Center::orderBy('nombre')->get(['id','nombre']);
+        return view('transfer.edit', compact('transfer','rescuers','centers'));
     }
 
     /**

@@ -30,7 +30,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware('auth')->name('home');
 
 Route::resource('centers', CenterController::class);
 
@@ -42,7 +42,7 @@ Route::resource('dispositions', DispositionController::class);
 
 Route::resource('health-records', HealthRecordController::class);
 
-Route::resource('reports', ReportController::class);
+Route::resource('reports', ReportController::class)->middleware('auth');
 
 Route::resource('animal-types', AnimalTypeController::class);
 
@@ -54,6 +54,7 @@ Route::resource('animal-files', AnimalFileController::class);
 Route::resource('people', PersonController::class);
 Route::resource('species', SpeciesController::class);
 Route::resource('breeds', BreedController::class);
+Route::get('breeds/by-species/{species}', [BreedController::class, 'bySpecies'])->name('breeds.bySpecies');
 Route::resource('releases', ReleaseController::class);
 Route::resource('veterinarians', VeterinarianController::class);
 Route::resource('medical-evaluations', MedicalEvaluationController::class);

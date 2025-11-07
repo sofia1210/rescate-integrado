@@ -36,8 +36,11 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >Persona Id</th>
-									<th >Aprobado</th>
+								<th >Reportante</th>
+								<th >Aprobado</th>
+								<th >Imagen</th>
+									<th >Observaciones</th>
+									<th >Cantidad Animales</th>
 
                                         <th></th>
                                     </tr>
@@ -47,8 +50,15 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $report->persona_id }}</td>
-										<td >{{ $report->aprobado }}</td>
+									<td >{{ $report->person?->nombre }}</td>
+									<td >{{ (int)$report->aprobado === 1 ? 'Sí' : 'No' }}</td>
+									<td >
+                                            @if($report->imagen_url)
+                                                <img src="{{ asset('storage/' . $report->imagen_url) }}" alt="img" style="height:50px; width:auto;"/>
+                                            @endif
+                                        </td>
+									<td >{{ $report->observaciones ?: '-' }}</td>
+										<td >{{ $report->cantidad_animales }}</td>
 
                                             <td>
                                                 <form action="{{ route('reports.destroy', $report->id) }}" method="POST">

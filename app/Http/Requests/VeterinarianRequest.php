@@ -25,6 +25,7 @@ class VeterinarianRequest extends FormRequest
 			'especialidad' => 'string',
 			'cv_documentado' => 'required|boolean',
 			'persona_id' => 'required',
+			'cv' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
         ];
     }
 }

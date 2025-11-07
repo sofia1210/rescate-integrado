@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Care;
+use App\Models\AnimalFile;
+use App\Models\CareType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\CareRequest;
@@ -16,7 +18,7 @@ class CareController extends Controller
      */
     public function index(Request $request): View
     {
-        $cares = Care::paginate();
+        $cares = Care::with(['animalFile','careType'])->paginate();
 
         return view('care.index', compact('cares'))
             ->with('i', ($request->input('page', 1) - 1) * $cares->perPage());
@@ -28,8 +30,10 @@ class CareController extends Controller
     public function create(): View
     {
         $care = new Care();
+        $animalFiles = AnimalFile::orderBy('nombre')->get(['id','nombre']);
+        $careTypes = CareType::orderBy('nombre')->get(['id','nombre']);
 
-        return view('care.create', compact('care'));
+        return view('care.create', compact('care','animalFiles','careTypes'));
     }
 
     /**
@@ -59,8 +63,10 @@ class CareController extends Controller
     public function edit($id): View
     {
         $care = Care::find($id);
+        $animalFiles = AnimalFile::orderBy('nombre')->get(['id','nombre']);
+        $careTypes = CareType::orderBy('nombre')->get(['id','nombre']);
 
-        return view('care.edit', compact('care'));
+        return view('care.edit', compact('care','animalFiles','careTypes'));
     }
 
     /**

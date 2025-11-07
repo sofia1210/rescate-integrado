@@ -28,6 +28,10 @@
                                     <strong>Centro Id:</strong>
                                     {{ $transfer->centro_id }}
                                 </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Observaciones:</strong>
+                                    {{ $transfer->observaciones }}
+                                </div>
 
                     </div>
                 </div>

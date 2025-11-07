@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\MedicalEvaluationRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\TreatmentType;
+use App\Models\Veterinarian;
 
 class MedicalEvaluationController extends Controller
 {
@@ -16,7 +18,7 @@ class MedicalEvaluationController extends Controller
      */
     public function index(Request $request): View
     {
-        $medicalEvaluations = MedicalEvaluation::paginate();
+        $medicalEvaluations = MedicalEvaluation::with(['treatmentType','veterinarian.person'])->paginate();
 
         return view('medical-evaluation.index', compact('medicalEvaluations'))
             ->with('i', ($request->input('page', 1) - 1) * $medicalEvaluations->perPage());
@@ -28,8 +30,10 @@ class MedicalEvaluationController extends Controller
     public function create(): View
     {
         $medicalEvaluation = new MedicalEvaluation();
+        $treatmentTypes = TreatmentType::orderBy('nombre')->get(['id','nombre']);
+        $veterinarians = Veterinarian::with('person')->orderBy('id')->get();
 
-        return view('medical-evaluation.create', compact('medicalEvaluation'));
+        return view('medical-evaluation.create', compact('medicalEvaluation','treatmentTypes','veterinarians'));
     }
 
     /**
@@ -59,8 +63,10 @@ class MedicalEvaluationController extends Controller
     public function edit($id): View
     {
         $medicalEvaluation = MedicalEvaluation::find($id);
+        $treatmentTypes = TreatmentType::orderBy('nombre')->get(['id','nombre']);
+        $veterinarians = Veterinarian::with('person')->orderBy('id')->get();
 
-        return view('medical-evaluation.edit', compact('medicalEvaluation'));
+        return view('medical-evaluation.edit', compact('medicalEvaluation','treatmentTypes','veterinarians'));
     }
 
     /**

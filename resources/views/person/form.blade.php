@@ -12,11 +12,6 @@
             {!! $errors->first('nombre', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
-            <label for="apellido" class="form-label">{{ __('Apellido') }}</label>
-            <input type="text" name="apellido" class="form-control @error('apellido') is-invalid @enderror" value="{{ old('apellido', $person?->apellido) }}" id="apellido" placeholder="Apellido">
-            {!! $errors->first('apellido', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
-        <div class="form-group mb-2 mb20">
             <label for="ci" class="form-label">{{ __('Ci') }}</label>
             <input type="text" name="ci" class="form-control @error('ci') is-invalid @enderror" value="{{ old('ci', $person?->ci) }}" id="ci" placeholder="Ci">
             {!! $errors->first('ci', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}

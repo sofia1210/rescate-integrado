@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $id
  * @property $rescatista_id
  * @property $centro_id
+ * @property $observaciones
  * @property $created_at
  * @property $updated_at
  *
@@ -28,7 +29,7 @@ class Transfer extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['rescatista_id', 'centro_id'];
+    protected $fillable = ['rescatista_id', 'centro_id', 'observaciones'];
 
 
     /**

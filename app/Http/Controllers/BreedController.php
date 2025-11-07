@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Breed;
+use App\Models\Species;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\BreedRequest;
@@ -28,8 +29,9 @@ class BreedController extends Controller
     public function create(): View
     {
         $breed = new Breed();
+        $species = Species::orderBy('nombre')->get(['id','nombre']);
 
-        return view('breed.create', compact('breed'));
+        return view('breed.create', compact('breed','species'));
     }
 
     /**
@@ -59,8 +61,9 @@ class BreedController extends Controller
     public function edit($id): View
     {
         $breed = Breed::find($id);
+        $species = Species::orderBy('nombre')->get(['id','nombre']);
 
-        return view('breed.edit', compact('breed'));
+        return view('breed.edit', compact('breed','species'));
     }
 
     /**
@@ -80,5 +83,17 @@ class BreedController extends Controller
 
         return Redirect::route('breeds.index')
             ->with('success', 'Breed deleted successfully');
+    }
+
+    /**
+     * Get breeds filtered by species (AJAX helper)
+     */
+    public function bySpecies($speciesId)
+    {
+        $breeds = Breed::where('especie_id', $speciesId)
+            ->orderBy('nombre')
+            ->get(['id','nombre']);
+
+        return response()->json($breeds);
     }
 }

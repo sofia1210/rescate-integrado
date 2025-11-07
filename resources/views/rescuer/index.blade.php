@@ -36,8 +36,8 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >Persona Id</th>
-									<th >Cv Documentado</th>
+								<th >Persona</th>
+								<th >CV</th>
 
                                         <th></th>
                                     </tr>
@@ -47,8 +47,14 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $rescuer->persona_id }}</td>
-										<td >{{ $rescuer->cv_documentado }}</td>
+									<td >{{ $rescuer->person?->nombre }}</td>
+									<td >
+                                                @if($rescuer->cv_path)
+                                                    <a href="{{ asset('storage/' . $rescuer->cv_path) }}" target="_blank">Ver CV</a>
+                                                @else
+                                                    {{ (int)$rescuer->cv_documentado === 1 ? 'Sí' : 'No' }}
+                                                @endif
+                                            </td>
 
                                             <td>
                                                 <form action="{{ route('rescuers.destroy', $rescuer->id) }}" method="POST">

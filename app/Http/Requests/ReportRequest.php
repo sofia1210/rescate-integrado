@@ -21,9 +21,20 @@ class ReportRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-			'persona_id' => 'required',
-			'aprobado' => 'required|boolean',
+        $rules = [
+			// persona_id and aprobado are set server-side
+			'cantidad_animales' => 'required|integer|min:1',
+			'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
+			'observaciones' => 'nullable|string',
+			'latitud' => 'nullable|numeric',
+			'longitud' => 'nullable|numeric',
+			'direccion' => 'nullable|string',
         ];
+
+        if (in_array($this->method(), ['PUT','PATCH'])) {
+            $rules['aprobado'] = 'required|boolean';
+        }
+
+        return $rules;
     }
 }

@@ -36,10 +36,10 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >Hoja Animal Id</th>
-									<th >Tipo Cuidado Id</th>
+								<th >Animal</th>
+								<th >Tipo de Cuidado</th>
 									<th >Descripcion</th>
-									<th >Fecha</th>
+								<th >Fecha</th>
 
                                         <th></th>
                                     </tr>
@@ -49,10 +49,10 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $care->hoja_animal_id }}</td>
-										<td >{{ $care->tipo_cuidado_id }}</td>
+									<td >{{ $care->animalFile?->nombre }}</td>
+									<td >{{ $care->careType?->nombre }}</td>
 										<td >{{ $care->descripcion }}</td>
-										<td >{{ $care->fecha }}</td>
+									<td >{{ $care->fecha ? \Carbon\Carbon::parse($care->fecha)->format('d-m-Y') : '' }}</td>
 
                                             <td>
                                                 <form action="{{ route('cares.destroy', $care->id) }}" method="POST">

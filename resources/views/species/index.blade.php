@@ -42,16 +42,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($species as $species)
+                                    @foreach ($species as $item)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-										<td >{{ $species->nombre }}</td>
+                                            <td>{{ $item->nombre }}</td>
 
                                             <td>
-                                                <form action="{{ route('species.destroy', $species->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('species.show', $species->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('species.edit', $species->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                <form action="{{ route('species.destroy', $item->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('species.show', $item->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('species.edit', $item->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>

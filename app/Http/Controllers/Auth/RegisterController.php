@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Person;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -81,5 +82,15 @@ class RegisterController extends Controller
         ]);
 
         return $user;
+    }
+
+    /**
+     * The user has been registered.
+     * Logout immediately and send to login page to start session explicitly.
+     */
+    protected function registered(Request $request, $user)
+    {
+        $this->guard()->logout();
+        return redirect('/login');
     }
 }

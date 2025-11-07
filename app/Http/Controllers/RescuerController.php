@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rescuer;
+use App\Models\Person;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\RescuerRequest;
@@ -16,7 +17,7 @@ class RescuerController extends Controller
      */
     public function index(Request $request): View
     {
-        $rescuers = Rescuer::paginate();
+        $rescuers = Rescuer::with('person')->paginate();
 
         return view('rescuer.index', compact('rescuers'))
             ->with('i', ($request->input('page', 1) - 1) * $rescuers->perPage());
@@ -28,8 +29,8 @@ class RescuerController extends Controller
     public function create(): View
     {
         $rescuer = new Rescuer();
-
-        return view('rescuer.create', compact('rescuer'));
+        $people = Person::orderBy('nombre')->get(['id','nombre']);
+        return view('rescuer.create', compact('rescuer','people'));
     }
 
     /**
@@ -37,7 +38,11 @@ class RescuerController extends Controller
      */
     public function store(RescuerRequest $request): RedirectResponse
     {
-        Rescuer::create($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('cv')) {
+            $data['cv_path'] = $request->file('cv')->store('cv', 'public');
+        }
+        Rescuer::create($data);
 
         return Redirect::route('rescuers.index')
             ->with('success', 'Rescuer created successfully.');
@@ -59,8 +64,8 @@ class RescuerController extends Controller
     public function edit($id): View
     {
         $rescuer = Rescuer::find($id);
-
-        return view('rescuer.edit', compact('rescuer'));
+        $people = Person::orderBy('nombre')->get(['id','nombre']);
+        return view('rescuer.edit', compact('rescuer','people'));
     }
 
     /**
@@ -68,7 +73,11 @@ class RescuerController extends Controller
      */
     public function update(RescuerRequest $request, Rescuer $rescuer): RedirectResponse
     {
-        $rescuer->update($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('cv')) {
+            $data['cv_path'] = $request->file('cv')->store('cv', 'public');
+        }
+        $rescuer->update($data);
 
         return Redirect::route('rescuers.index')
             ->with('success', 'Rescuer updated successfully');

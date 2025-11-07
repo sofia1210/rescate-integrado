@@ -35,10 +35,9 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-                                        
-									<th >Nombre</th>
-									<th >Permite Adopcion</th>
-									<th >Permite Liberacion</th>
+                                        <th>Nombre</th>
+                                        <th>Permite Adopción</th>
+                                        <th>Permite Liberación</th>
 
                                         <th></th>
                                     </tr>
@@ -47,10 +46,9 @@
                                     @foreach ($animalTypes as $animalType)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-										<td >{{ $animalType->nombre }}</td>
-										<td >{{ $animalType->permite_adopcion }}</td>
-										<td >{{ $animalType->permite_liberacion }}</td>
+                                            <td>{{ $animalType->nombre }}</td>
+                                            <td>{{ $animalType->permite_adopcion ? 'Sí' : 'No' }}</td>
+                                            <td>{{ $animalType->permite_liberacion ? 'Sí' : 'No' }}</td>
 
                                             <td>
                                                 <form action="{{ route('animal-types.destroy', $animalType->id) }}" method="POST">

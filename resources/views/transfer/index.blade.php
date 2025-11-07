@@ -36,8 +36,9 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >Rescatista Id</th>
-									<th >Centro Id</th>
+								<th >Rescatista</th>
+								<th >Centro</th>
+									<th >Observaciones</th>
 
                                         <th></th>
                                     </tr>
@@ -47,8 +48,9 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $transfer->rescatista_id }}</td>
-										<td >{{ $transfer->centro_id }}</td>
+									<td >{{ $transfer->rescuer?->person?->nombre ?? $transfer->rescuer?->id }}</td>
+									<td >{{ $transfer->center?->nombre ?? $transfer->center?->id }}</td>
+										<td >{{ $transfer->observaciones }}</td>
 
                                             <td>
                                                 <form action="{{ route('transfers.destroy', $transfer->id) }}" method="POST">

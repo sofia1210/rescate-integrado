@@ -24,6 +24,8 @@ class CenterRequest extends FormRequest
         return [
 			'nombre' => 'required|string',
 			'direccion' => 'string',
+            'latitud' => 'nullable|numeric|between:-90,90',
+            'longitud' => 'nullable|numeric|between:-180,180',
 			'contacto' => 'string',
         ];
     }

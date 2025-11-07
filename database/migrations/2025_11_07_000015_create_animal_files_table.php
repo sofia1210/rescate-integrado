@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('animal_files', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
-            $table->enum('tipo', ['Hembra', 'Macho', 'Desconocido']);
+            $table->enum('sexo', ['Hembra', 'Macho', 'Desconocido']);
             $table->foreignId('tipo_id')->constrained('animal_types')->cascadeOnDelete();
             $table->foreignId('reporte_id')->constrained('reports')->cascadeOnDelete();
             $table->foreignId('especie_id')->constrained('species')->cascadeOnDelete();

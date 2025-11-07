@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('rescatista_id')->constrained('rescuers')->cascadeOnDelete();
             $table->foreignId('centro_id')->constrained('centers')->cascadeOnDelete();
+            $table->string('observaciones')->nullable();
             $table->timestamps();
         });
     }

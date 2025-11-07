@@ -2,13 +2,23 @@
     <div class="col-md-12">
         
         <div class="form-group mb-2 mb20">
-            <label for="hoja_animal_id" class="form-label">{{ __('Hoja Animal Id') }}</label>
-            <input type="text" name="hoja_animal_id" class="form-control @error('hoja_animal_id') is-invalid @enderror" value="{{ old('hoja_animal_id', $care?->hoja_animal_id) }}" id="hoja_animal_id" placeholder="Hoja Animal Id">
+            <label for="hoja_animal_id" class="form-label">{{ __('Animal') }}</label>
+            <select name="hoja_animal_id" id="hoja_animal_id" class="form-control @error('hoja_animal_id') is-invalid @enderror">
+                <option value="">Seleccione</option>
+                @foreach(($animalFiles ?? []) as $af)
+                    <option value="{{ $af->id }}" {{ (string)old('hoja_animal_id', $care?->hoja_animal_id) === (string)$af->id ? 'selected' : '' }}>{{ $af->nombre }}</option>
+                @endforeach
+            </select>
             {!! $errors->first('hoja_animal_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
-            <label for="tipo_cuidado_id" class="form-label">{{ __('Tipo Cuidado Id') }}</label>
-            <input type="text" name="tipo_cuidado_id" class="form-control @error('tipo_cuidado_id') is-invalid @enderror" value="{{ old('tipo_cuidado_id', $care?->tipo_cuidado_id) }}" id="tipo_cuidado_id" placeholder="Tipo Cuidado Id">
+            <label for="tipo_cuidado_id" class="form-label">{{ __('Tipo de Cuidado') }}</label>
+            <select name="tipo_cuidado_id" id="tipo_cuidado_id" class="form-control @error('tipo_cuidado_id') is-invalid @enderror">
+                <option value="">Seleccione</option>
+                @foreach(($careTypes ?? []) as $ct)
+                    <option value="{{ $ct->id }}" {{ (string)old('tipo_cuidado_id', $care?->tipo_cuidado_id) === (string)$ct->id ? 'selected' : '' }}>{{ $ct->nombre }}</option>
+                @endforeach
+            </select>
             {!! $errors->first('tipo_cuidado_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
@@ -18,7 +28,7 @@
         </div>
         <div class="form-group mb-2 mb20">
             <label for="fecha" class="form-label">{{ __('Fecha') }}</label>
-            <input type="text" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', $care?->fecha) }}" id="fecha" placeholder="Fecha">
+            <input type="date" name="fecha" class="form-control @error('fecha') is-invalid @enderror" value="{{ old('fecha', $care?->fecha) }}" id="fecha">
             {!! $errors->first('fecha', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 

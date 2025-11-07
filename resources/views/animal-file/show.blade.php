@@ -25,8 +25,8 @@
                                     {{ $animalFile->nombre }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
-                                    <strong>Tipo:</strong>
-                                    {{ $animalFile->tipo }}
+                                    <strong>Sexo:</strong>
+                                    {{ $animalFile->sexo }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Tipo Id:</strong>
@@ -39,6 +39,10 @@
                                 <div class="form-group mb-2 mb20">
                                     <strong>Especie Id:</strong>
                                     {{ $animalFile->especie_id }}
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Imagen Url:</strong>
+                                    {{ $animalFile->imagen_url }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Raza Id:</strong>

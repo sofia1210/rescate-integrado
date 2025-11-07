@@ -21,12 +21,40 @@
                     <div class="card-body bg-white">
                         
                                 <div class="form-group mb-2 mb20">
-                                    <strong>Persona Id:</strong>
-                                    {{ $report->persona_id }}
+                                    <strong>Reportante:</strong>
+                                    {{ $report->person?->nombre ?? '-' }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Aprobado:</strong>
-                                    {{ $report->aprobado }}
+                                    {{ (int)$report->aprobado === 1 ? 'Sí' : 'No' }}
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Imagen:</strong>
+                                    @if($report->imagen_url)
+                                        <div><img src="{{ asset('storage/' . $report->imagen_url) }}" alt="img" style="max-height:180px;"></div>
+                                    @else
+                                        <span>-</span>
+                                    @endif
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Observaciones:</strong>
+                                    {{ $report->observaciones ?: '-' }}
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Cantidad Animales:</strong>
+                                    {{ $report->cantidad_animales }}
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Dirección:</strong>
+                                    {{ $report->direccion ?: '-' }}
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Latitud:</strong>
+                                    {{ $report->latitud ?: '-' }}
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Longitud:</strong>
+                                    {{ $report->longitud ?: '-' }}
                                 </div>
 
                     </div>

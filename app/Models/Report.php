@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property $id
  * @property $persona_id
  * @property $aprobado
+ * @property $imagen_url
+ * @property $observaciones
+ * @property $cantidad_animales
  * @property $created_at
  * @property $updated_at
  *
@@ -28,7 +31,7 @@ class Report extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['persona_id', 'aprobado'];
+    protected $fillable = ['persona_id', 'aprobado', 'imagen_url', 'observaciones', 'cantidad_animales', 'latitud', 'longitud', 'direccion'];
 
 
     /**

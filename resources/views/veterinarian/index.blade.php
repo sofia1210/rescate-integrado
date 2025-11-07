@@ -37,8 +37,8 @@
                                         <th>No</th>
                                         
 									<th >Especialidad</th>
-									<th >Cv Documentado</th>
-									<th >Persona Id</th>
+								<th >CV</th>
+								<th >Persona</th>
 
                                         <th></th>
                                     </tr>
@@ -49,8 +49,14 @@
                                             <td>{{ ++$i }}</td>
                                             
 										<td >{{ $veterinarian->especialidad }}</td>
-										<td >{{ $veterinarian->cv_documentado }}</td>
-										<td >{{ $veterinarian->persona_id }}</td>
+									<td >
+                                                @if($veterinarian->cv_path)
+                                                    <a href="{{ asset('storage/' . $veterinarian->cv_path) }}" target="_blank">Ver CV</a>
+                                                @else
+                                                    {{ (int)$veterinarian->cv_documentado === 1 ? 'Sí' : 'No' }}
+                                                @endif
+                                            </td>
+									<td >{{ $veterinarian->person?->nombre }}</td>
 
                                             <td>
                                                 <form action="{{ route('veterinarians.destroy', $veterinarian->id) }}" method="POST">

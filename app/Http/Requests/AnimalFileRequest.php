@@ -22,13 +22,17 @@ class AnimalFileRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'nombre' => 'required|string',
-			'tipo' => 'required|string',
+            'nombre' => 'required|string',
+            'sexo' => 'required|string',
 			'tipo_id' => 'required',
 			'reporte_id' => 'required',
 			'especie_id' => 'required',
+			'imagen_url' => 'nullable|string',
+			'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
 			'raza_id' => 'required',
 			'estado_id' => 'required',
+			'adopcion_id' => 'nullable',
+			'liberacion_id' => 'nullable',
         ];
     }
 }

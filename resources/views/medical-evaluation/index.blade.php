@@ -36,10 +36,10 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >Tratamiento Id</th>
-									<th >Descripcion</th>
-									<th >Fecha</th>
-									<th >Veterinario Id</th>
+								<th >Tratamiento</th>
+								<th >Descripcion</th>
+								<th >Fecha Revisión</th>
+								<th >Veterinario</th>
 
                                         <th></th>
                                     </tr>
@@ -49,10 +49,10 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $medicalEvaluation->tratamiento_id }}</td>
-										<td >{{ $medicalEvaluation->descripcion }}</td>
-										<td >{{ $medicalEvaluation->fecha }}</td>
-										<td >{{ $medicalEvaluation->veterinario_id }}</td>
+									<td >{{ $medicalEvaluation->treatmentType?->nombre }}</td>
+									<td >{{ $medicalEvaluation->descripcion }}</td>
+									<td >{{ $medicalEvaluation->fecha ? \Carbon\Carbon::parse($medicalEvaluation->fecha)->format('d-m-Y') : '' }}</td>
+									<td >{{ $medicalEvaluation->veterinarian?->person?->nombre }}</td>
 
                                             <td>
                                                 <form action="{{ route('medical-evaluations.destroy', $medicalEvaluation->id) }}" method="POST">

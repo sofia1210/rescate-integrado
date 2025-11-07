@@ -2,8 +2,13 @@
     <div class="col-md-12">
         
         <div class="form-group mb-2 mb20">
-            <label for="especie_id" class="form-label">{{ __('Especie Id') }}</label>
-            <input type="text" name="especie_id" class="form-control @error('especie_id') is-invalid @enderror" value="{{ old('especie_id', $breed?->especie_id) }}" id="especie_id" placeholder="Especie Id">
+            <label for="especie_id" class="form-label">{{ __('Especie') }}</label>
+            <select name="especie_id" id="especie_id" class="form-control @error('especie_id') is-invalid @enderror">
+                <option value="">Seleccione</option>
+                @foreach(($species ?? []) as $s)
+                    <option value="{{ $s->id }}" {{ (string)old('especie_id', $breed?->especie_id) === (string)$s->id ? 'selected' : '' }}>{{ $s->nombre }}</option>
+                @endforeach
+            </select>
             {!! $errors->first('especie_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">

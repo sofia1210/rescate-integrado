@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Veterinarian;
+use App\Models\Person;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\VeterinarianRequest;
@@ -16,7 +17,7 @@ class VeterinarianController extends Controller
      */
     public function index(Request $request): View
     {
-        $veterinarians = Veterinarian::paginate();
+        $veterinarians = Veterinarian::with('person')->paginate();
 
         return view('veterinarian.index', compact('veterinarians'))
             ->with('i', ($request->input('page', 1) - 1) * $veterinarians->perPage());
@@ -28,8 +29,8 @@ class VeterinarianController extends Controller
     public function create(): View
     {
         $veterinarian = new Veterinarian();
-
-        return view('veterinarian.create', compact('veterinarian'));
+        $people = Person::orderBy('nombre')->get(['id','nombre']);
+        return view('veterinarian.create', compact('veterinarian','people'));
     }
 
     /**
@@ -37,7 +38,11 @@ class VeterinarianController extends Controller
      */
     public function store(VeterinarianRequest $request): RedirectResponse
     {
-        Veterinarian::create($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('cv')) {
+            $data['cv_path'] = $request->file('cv')->store('cv', 'public');
+        }
+        Veterinarian::create($data);
 
         return Redirect::route('veterinarians.index')
             ->with('success', 'Veterinarian created successfully.');
@@ -59,8 +64,8 @@ class VeterinarianController extends Controller
     public function edit($id): View
     {
         $veterinarian = Veterinarian::find($id);
-
-        return view('veterinarian.edit', compact('veterinarian'));
+        $people = Person::orderBy('nombre')->get(['id','nombre']);
+        return view('veterinarian.edit', compact('veterinarian','people'));
     }
 
     /**
@@ -68,7 +73,11 @@ class VeterinarianController extends Controller
      */
     public function update(VeterinarianRequest $request, Veterinarian $veterinarian): RedirectResponse
     {
-        $veterinarian->update($request->validated());
+        $data = $request->validated();
+        if ($request->hasFile('cv')) {
+            $data['cv_path'] = $request->file('cv')->store('cv', 'public');
+        }
+        $veterinarian->update($data);
 
         return Redirect::route('veterinarians.index')
             ->with('success', 'Veterinarian updated successfully');

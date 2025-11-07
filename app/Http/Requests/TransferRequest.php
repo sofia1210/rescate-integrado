@@ -24,6 +24,7 @@ class TransferRequest extends FormRequest
         return [
 			'rescatista_id' => 'required',
 			'centro_id' => 'required',
+			'observaciones' => 'string',
         ];
     }
 }

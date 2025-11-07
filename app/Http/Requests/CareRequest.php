@@ -25,6 +25,7 @@ class CareRequest extends FormRequest
 			'hoja_animal_id' => 'required',
 			'tipo_cuidado_id' => 'required',
 			'descripcion' => 'string',
+			'fecha' => 'required|date',
         ];
     }
 }

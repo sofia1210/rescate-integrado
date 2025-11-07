@@ -12,14 +12,10 @@
             {!! $errors->first('detalle', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
-            <label for="latitud" class="form-label">{{ __('Latitud') }}</label>
-            <input type="text" name="latitud" class="form-control @error('latitud') is-invalid @enderror" value="{{ old('latitud', $release?->latitud) }}" id="latitud" placeholder="Latitud">
-            {!! $errors->first('latitud', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
-        <div class="form-group mb-2 mb20">
-            <label for="longitud" class="form-label">{{ __('Longitud') }}</label>
-            <input type="text" name="longitud" class="form-control @error('longitud') is-invalid @enderror" value="{{ old('longitud', $release?->longitud) }}" id="longitud" placeholder="Longitud">
-            {!! $errors->first('longitud', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+            <label class="form-label">{{ __('Ubicación (clic en el mapa)') }}</label>
+            <div id="release_map" style="height: 300px; border-radius: 4px;"></div>
+            <input type="hidden" name="latitud" id="latitud" value="{{ old('latitud', $release?->latitud) }}">
+            <input type="hidden" name="longitud" id="longitud" value="{{ old('longitud', $release?->longitud) }}">
         </div>
         <div class="form-group mb-2 mb20">
             <label for="aprobada" class="form-label">{{ __('Aprobada') }}</label>
@@ -32,3 +28,16 @@
         <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
     </div>
 </div>
+
+@include('partials.leaflet')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    window.initMapWithGeolocation({
+        mapId: 'release_map',
+        latInputId: 'latitud',
+        lonInputId: 'longitud',
+        start: { lat: -17.7833, lon: -63.1821, zoom: 13 },
+        enableReverseGeocode: false,
+    });
+});
+</script>

@@ -38,7 +38,6 @@
                                         
 									<th >Usuario Id</th>
 									<th >Nombre</th>
-									<th >Apellido</th>
 									<th >Ci</th>
 									<th >Telefono</th>
 									<th >Es Cuidador</th>
@@ -53,7 +52,6 @@
                                             
 										<td >{{ $person->usuario_id }}</td>
 										<td >{{ $person->nombre }}</td>
-										<td >{{ $person->apellido }}</td>
 										<td >{{ $person->ci }}</td>
 										<td >{{ $person->telefono }}</td>
 										<td >{{ $person->es_cuidador }}</td>

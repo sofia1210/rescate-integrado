@@ -35,9 +35,8 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>No</th>
-                                        
-									<th >Especie Id</th>
-									<th >Nombre</th>
+                                        <th>Especie</th>
+                                        <th>Nombre</th>
 
                                         <th></th>
                                     </tr>
@@ -46,9 +45,8 @@
                                     @foreach ($breeds as $breed)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
-										<td >{{ $breed->especie_id }}</td>
-										<td >{{ $breed->nombre }}</td>
+                                            <td>{{ optional($breed->species)->nombre }}</td>
+                                            <td>{{ $breed->nombre }}</td>
 
                                             <td>
                                                 <form action="{{ route('breeds.destroy', $breed->id) }}" method="POST">

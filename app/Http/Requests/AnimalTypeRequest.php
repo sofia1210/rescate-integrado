@@ -22,9 +22,26 @@ class AnimalTypeRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'nombre' => 'required|string',
-			'permite_adopcion' => 'required|boolean',
-			'permite_liberacion' => 'required|boolean',
+            'nombre' => 'required|string',
+            'permite_adopcion' => 'required|boolean',
+            'permite_liberacion' => 'required|boolean',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'permite_adopcion' => filter_var($this->input('permite_adopcion', 0), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? 0,
+            'permite_liberacion' => filter_var($this->input('permite_liberacion', 0), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE) ?? 0,
+        ]);
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($v) {
+            if ($this->boolean('permite_adopcion') && $this->boolean('permite_liberacion')) {
+                $v->errors()->add('permite_liberacion', 'No puede permitir adopción y liberación al mismo tiempo.');
+            }
+        });
     }
 }
