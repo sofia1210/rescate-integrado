@@ -15,9 +15,7 @@ return new class extends Migration
             $table->decimal('longitud', 10, 7)->nullable();
             $table->text('detalle')->nullable();
             $table->boolean('aprobada')->default(false);
-            $table->foreignId('administrador_usuario_id')->constrained('users')->cascadeOnDelete();
-            $table->unsignedBigInteger('adoptante_persona_id');
-            $table->index('adoptante_persona_id');
+            $table->unsignedBigInteger('adoptante_id');
             $table->timestamps();
         });
     }

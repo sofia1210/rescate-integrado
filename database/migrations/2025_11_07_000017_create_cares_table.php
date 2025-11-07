@@ -10,7 +10,6 @@ return new class extends Migration
     {
         Schema::create('cares', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('registrado_por_usuario_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('hoja_animal_id')->constrained('animal_files')->cascadeOnDelete();
             $table->foreignId('tipo_cuidado_id')->constrained('care_types')->cascadeOnDelete();
             $table->text('descripcion')->nullable();
