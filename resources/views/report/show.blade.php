@@ -56,10 +56,36 @@
                                     <strong>Longitud:</strong>
                                     {{ $report->longitud ?: '-' }}
                                 </div>
+                                @if(!is_null($report->latitud) && !is_null($report->longitud))
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Ubicación:</strong>
+                                    <div id="report_map" style="height: 320px; border-radius: 6px; overflow: hidden;"></div>
+                                </div>
+                                @endif
 
                     </div>
                 </div>
             </div>
         </div>
     </section>
+@include('partials.leaflet')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var rawLat = @json($report->latitud);
+    var rawLon = @json($report->longitud);
+    var lat = parseFloat(rawLat);
+    var lon = parseFloat(rawLon);
+    var hasLat = rawLat !== null && rawLat !== '' && Number.isFinite(lat);
+    var hasLon = rawLon !== null && rawLon !== '' && Number.isFinite(lon);
+    if (hasLat && hasLon) {
+        window.initStaticMap({
+            mapId: 'report_map',
+            lat: lat,
+            lon: lon,
+            zoom: 16,
+            popup: @json($report->direccion ?? null),
+        });
+    }
+});
+</script>
 @endsection

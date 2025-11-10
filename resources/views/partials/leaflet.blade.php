@@ -75,6 +75,31 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
     map.on('click', (e) => setMarker(e.latlng.lat.toFixed(6), e.latlng.lng.toFixed(6)));
     return map;
 }
+
+// Simple, read-only map initializer for show views
+window.initStaticMap = function initStaticMap(opts) {
+    const {
+        mapId,
+        lat,
+        lon,
+        zoom = 15,
+        popup = null,
+        start = { lat: -17.7833, lon: -63.1821, zoom: 13 },
+    } = opts || {};
+    const mapEl = document.getElementById(mapId);
+    if (!mapEl) return null;
+    const hasCoords = typeof lat === 'number' && typeof lon === 'number' && !Number.isNaN(lat) && !Number.isNaN(lon);
+    const map = L.map(mapId).setView(
+        hasCoords ? [lat, lon] : [start.lat, start.lon],
+        hasCoords ? zoom : start.zoom
+    );
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+    if (hasCoords) {
+        const marker = L.marker([lat, lon]).addTo(map);
+        if (popup) marker.bindPopup(popup).openPopup();
+    }
+    return map;
+}
 </script>
 @endonce
 

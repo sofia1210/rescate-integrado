@@ -36,6 +36,12 @@
                                     <strong>Longitud:</strong>
                                     {{ $release->longitud }}
                                 </div>
+                                @if(!is_null($release->latitud) && !is_null($release->longitud))
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Ubicación:</strong>
+                                    <div id="release_map" style="height: 320px; border-radius: 6px; overflow: hidden;"></div>
+                                </div>
+                                @endif
                                 <div class="form-group mb-2 mb20">
                                     <strong>Aprobada:</strong>
                                     {{ (int)$release->aprobada === 1 ? 'Sí' : 'No' }}
@@ -46,4 +52,24 @@
             </div>
         </div>
     </section>
+@include('partials.leaflet')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var rawLat = @json($release->latitud);
+    var rawLon = @json($release->longitud);
+    var lat = parseFloat(rawLat);
+    var lon = parseFloat(rawLon);
+    var hasLat = rawLat !== null && rawLat !== '' && Number.isFinite(lat);
+    var hasLon = rawLon !== null && rawLon !== '' && Number.isFinite(lon);
+    if (hasLat && hasLon) {
+        window.initStaticMap({
+            mapId: 'release_map',
+            lat: lat,
+            lon: lon,
+            zoom: 16,
+            popup: @json($release->direccion ?? null),
+        });
+    }
+});
+</script>
 @endsection

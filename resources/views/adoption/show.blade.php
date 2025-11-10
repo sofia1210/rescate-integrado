@@ -32,6 +32,12 @@
                                     <strong>Longitud:</strong>
                                     {{ $adoption->longitud }}
                                 </div>
+                                @if(!is_null($adoption->latitud) && !is_null($adoption->longitud))
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Ubicación:</strong>
+                                    <div id="adoption_map" style="height: 320px; border-radius: 6px; overflow: hidden;"></div>
+                                </div>
+                                @endif
                                 <div class="form-group mb-2 mb20">
                                     <strong>Detalle:</strong>
                                     {{ $adoption->detalle }}
@@ -50,4 +56,24 @@
             </div>
         </div>
     </section>
+@include('partials.leaflet')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var rawLat = @json($adoption->latitud);
+    var rawLon = @json($adoption->longitud);
+    var lat = parseFloat(rawLat);
+    var lon = parseFloat(rawLon);
+    var hasLat = rawLat !== null && rawLat !== '' && Number.isFinite(lat);
+    var hasLon = rawLon !== null && rawLon !== '' && Number.isFinite(lon);
+    if (hasLat && hasLon) {
+        window.initStaticMap({
+            mapId: 'adoption_map',
+            lat: lat,
+            lon: lon,
+            zoom: 16,
+            popup: @json($adoption->direccion ?? null),
+        });
+    }
+});
+</script>
 @endsection

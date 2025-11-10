@@ -36,6 +36,12 @@
                                     <strong>Longitud:</strong>
                                     {{ $center->longitud }}
                                 </div>
+                                @if(!is_null($center->latitud) && !is_null($center->longitud))
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Ubicación:</strong>
+                                    <div id="center_map" style="height: 320px; border-radius: 6px; overflow: hidden;"></div>
+                                </div>
+                                @endif
                                 <div class="form-group mb-2 mb20">
                                     <strong>Contacto:</strong>
                                     {{ $center->contacto }}
@@ -46,4 +52,24 @@
             </div>
         </div>
     </section>
+@include('partials.leaflet')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var rawLat = @json($center->latitud);
+    var rawLon = @json($center->longitud);
+    var lat = parseFloat(rawLat);
+    var lon = parseFloat(rawLon);
+    var hasLat = rawLat !== null && rawLat !== '' && Number.isFinite(lat);
+    var hasLon = rawLon !== null && rawLon !== '' && Number.isFinite(lon);
+    if (hasLat && hasLon) {
+        window.initStaticMap({
+            mapId: 'center_map',
+            lat: lat,
+            lon: lon,
+            zoom: 16,
+            popup: @json($center->direccion ?? null),
+        });
+    }
+});
+</script>
 @endsection
