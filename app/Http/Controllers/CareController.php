@@ -18,7 +18,7 @@ class CareController extends Controller
      */
     public function index(Request $request): View
     {
-        $cares = Care::with(['animalFile','careType'])->paginate();
+        $cares = Care::with(['animalFile.animal','careType'])->paginate();
 
         return view('care.index', compact('cares'))
             ->with('i', ($request->input('page', 1) - 1) * $cares->perPage());
@@ -30,7 +30,14 @@ class CareController extends Controller
     public function create(): View
     {
         $care = new Care();
-        $animalFiles = AnimalFile::orderBy('nombre')->get(['id','nombre']);
+        // Join animals to get displayable name from animals.nombre
+        $animalFiles = AnimalFile::query()
+            ->join('animals', 'animal_files.animal_id', '=', 'animals.id')
+            ->orderBy('animals.nombre')
+            ->get([
+                'animal_files.id as id',
+                'animals.nombre as nombre',
+            ]);
         $careTypes = CareType::orderBy('nombre')->get(['id','nombre']);
 
         return view('care.create', compact('care','animalFiles','careTypes'));
@@ -63,7 +70,14 @@ class CareController extends Controller
     public function edit($id): View
     {
         $care = Care::find($id);
-        $animalFiles = AnimalFile::orderBy('nombre')->get(['id','nombre']);
+        // Join animals to get displayable name from animals.nombre
+        $animalFiles = AnimalFile::query()
+            ->join('animals', 'animal_files.animal_id', '=', 'animals.id')
+            ->orderBy('animals.nombre')
+            ->get([
+                'animal_files.id as id',
+                'animals.nombre as nombre',
+            ]);
         $careTypes = CareType::orderBy('nombre')->get(['id','nombre']);
 
         return view('care.edit', compact('care','animalFiles','careTypes'));

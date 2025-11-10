@@ -49,7 +49,7 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-									<td >{{ $care->animalFile?->nombre }}</td>
+									<td >{{ $care->animalFile?->animal?->nombre }}</td>
 									<td >{{ $care->careType?->nombre }}</td>
 										<td >{{ $care->descripcion }}</td>
 									<td >{{ $care->fecha ? \Carbon\Carbon::parse($care->fecha)->format('d-m-Y') : '' }}</td>
