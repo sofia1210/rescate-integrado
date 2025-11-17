@@ -9,8 +9,6 @@ use App\Models\AnimalStatus;
 use App\Models\Report;
 use App\Models\Animal;
 use App\Models\Breed;
-use App\Models\Adoption;
-use App\Models\Release;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\AnimalFileRequest;
@@ -41,10 +39,8 @@ class AnimalFileController extends Controller
         $species = Species::orderBy('nombre')->get(['id','nombre']);
         $animalStatuses = AnimalStatus::orderBy('nombre')->get(['id','nombre']);
         $animals = Animal::orderByDesc('id')->get(['id','nombre']);
-        $adoptions = Adoption::orderByDesc('id')->get(['id']);
-        $releases = Release::orderByDesc('id')->get(['id']);
 
-        return view('animal-file.create', compact('animalFile','animalTypes','species','animalStatuses','animals','adoptions','releases'));
+        return view('animal-file.create', compact('animalFile','animalTypes','species','animalStatuses','animals'));
     }
 
     /**
@@ -83,13 +79,11 @@ class AnimalFileController extends Controller
         $species = Species::orderBy('nombre')->get(['id','nombre']);
         $animalStatuses = AnimalStatus::orderBy('nombre')->get(['id','nombre']);
         $animals = Animal::orderByDesc('id')->get(['id','nombre']);
-        $adoptions = Adoption::orderByDesc('id')->get(['id']);
-        $releases = Release::orderByDesc('id')->get(['id']);
         $breeds = $animalFile?->especie_id
             ? Breed::where('especie_id', $animalFile->especie_id)->orderBy('nombre')->get(['id','nombre'])
             : collect();
 
-        return view('animal-file.edit', compact('animalFile','animalTypes','species','animalStatuses','animals','adoptions','releases','breeds'));
+        return view('animal-file.edit', compact('animalFile','animalTypes','species','animalStatuses','animals','breeds'));
     }
 
     /**

@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $created_at
  * @property $updated_at
  *
- * @property AnimalFile[] $animalFiles
+ * @property AnimalFile $animalFile
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -31,15 +31,15 @@ class Adoption extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['direccion', 'latitud', 'longitud', 'detalle', 'aprobada', 'adoptante_id'];
+    protected $fillable = ['direccion', 'latitud', 'longitud', 'detalle', 'aprobada', 'adoptante_id', 'animal_file_id'];
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function animalFiles()
+    public function animalFile()
     {
-        return $this->hasMany(\App\Models\AnimalFile::class, 'id', 'adopcion_id');
+        return $this->belongsTo(\App\Models\AnimalFile::class, 'animal_file_id', 'id');
     }
     
     public function adopter()

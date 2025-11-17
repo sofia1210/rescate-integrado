@@ -27,6 +27,18 @@
             {!! $errors->first('aprobada', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
+            <label for="animal_file_id" class="form-label">{{ __('Animal (adoptable)') }}</label>
+            <select name="animal_file_id" id="animal_file_id" class="form-control @error('animal_file_id') is-invalid @enderror">
+                <option value="">{{ __('Seleccione') }}</option>
+                @foreach(($animalFiles ?? []) as $af)
+                    <option value="{{ $af->id }}" {{ (string)old('animal_file_id', $adoption?->animal_file_id) === (string)$af->id ? 'selected' : '' }}>
+                        #{{ $af->id }} {{ $af->nombre ? '- ' . $af->nombre : '' }}
+                    </option>
+                @endforeach
+            </select>
+            {!! $errors->first('animal_file_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+        <div class="form-group mb-2 mb20">
             <label for="adoptante_id" class="form-label">{{ __('Adoptante') }}</label>
             <select name="adoptante_id" id="adoptante_id" class="form-control @error('adoptante_id') is-invalid @enderror">
                 <option value="">Seleccione</option>

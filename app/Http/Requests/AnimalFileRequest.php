@@ -29,8 +29,6 @@ class AnimalFileRequest extends FormRequest
 			'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:4096',
 			'raza_id' => 'required',
 			'estado_id' => 'required',
-			'adopcion_id' => 'nullable',
-			'liberacion_id' => 'nullable',
         ];
     }
 }

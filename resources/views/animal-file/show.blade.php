@@ -56,14 +56,6 @@
                                     <strong>Estado:</strong>
                                     {{ $animalFile->animalStatus?->nombre ?? '-' }}
                                 </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>Adopción:</strong>
-                                    {{ $animalFile->adopcion_id ? '#' . $animalFile->adopcion_id : '-' }}
-                                </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>Liberación:</strong>
-                                    {{ $animalFile->liberacion_id ? '#' . $animalFile->liberacion_id : '-' }}
-                                </div>
 
                     </div>
                 </div>

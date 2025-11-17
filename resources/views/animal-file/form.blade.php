@@ -71,28 +71,7 @@
             </select>
             {!! $errors->first('estado_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        @if(!empty($animalFile?->id))
-        <div class="form-group mb-2 mb20">
-            <label for="adopcion_id" class="form-label">{{ __('Adopción (opcional)') }}</label>
-            <select name="adopcion_id" id="adopcion_id" class="form-control @error('adopcion_id') is-invalid @enderror">
-                <option value="">Ninguna</option>
-                @foreach(($adoptions ?? []) as $a)
-                    <option value="{{ $a->id }}" {{ (string)old('adopcion_id', $animalFile?->adopcion_id) === (string)$a->id ? 'selected' : '' }}>#{{ $a->id }}</option>
-                @endforeach
-            </select>
-            {!! $errors->first('adopcion_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
-        <div class="form-group mb-2 mb20">
-            <label for="liberacion_id" class="form-label">{{ __('Liberación (opcional)') }}</label>
-            <select name="liberacion_id" id="liberacion_id" class="form-control @error('liberacion_id') is-invalid @enderror">
-                <option value="">Ninguna</option>
-                @foreach(($releases ?? []) as $rl)
-                    <option value="{{ $rl->id }}" {{ (string)old('liberacion_id', $animalFile?->liberacion_id) === (string)$rl->id ? 'selected' : '' }}>#{{ $rl->id }}</option>
-                @endforeach
-            </select>
-            {!! $errors->first('liberacion_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
-        @endif
+        
 
     </div>
     <div class="col-md-12 mt20 mt-2">

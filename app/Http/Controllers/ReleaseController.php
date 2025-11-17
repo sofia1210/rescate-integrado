@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Release;
+use App\Models\AnimalFile;
+use App\Models\AnimalType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\ReleaseRequest;
@@ -28,8 +30,16 @@ class ReleaseController extends Controller
     public function create(): View
     {
         $release = new Release();
+        $animalFiles = AnimalFile::query()
+            ->join('animal_types', 'animal_files.tipo_id', '=', 'animal_types.id')
+            ->leftJoin('releases', 'releases.animal_file_id', '=', 'animal_files.id')
+            ->join('animals', 'animal_files.animal_id', '=', 'animals.id')
+            ->where('animal_types.permite_liberacion', true)
+            ->whereNull('releases.animal_file_id')
+            ->orderBy('animals.nombre')
+            ->get(['animal_files.id as id', 'animals.nombre as nombre']);
 
-        return view('release.create', compact('release'));
+        return view('release.create', compact('release','animalFiles'));
     }
 
     /**
@@ -59,8 +69,19 @@ class ReleaseController extends Controller
     public function edit($id): View
     {
         $release = Release::find($id);
+        $animalFiles = AnimalFile::query()
+            ->join('animal_types', 'animal_files.tipo_id', '=', 'animal_types.id')
+            ->leftJoin('releases', 'releases.animal_file_id', '=', 'animal_files.id')
+            ->join('animals', 'animal_files.animal_id', '=', 'animals.id')
+            ->where('animal_types.permite_liberacion', true)
+            ->where(function($q) use ($release) {
+                $q->whereNull('releases.animal_file_id')
+                  ->orWhere('releases.id', $release->id);
+            })
+            ->orderBy('animals.nombre')
+            ->get(['animal_files.id as id', 'animals.nombre as nombre']);
 
-        return view('release.edit', compact('release'));
+        return view('release.edit', compact('release','animalFiles'));
     }
 
     /**

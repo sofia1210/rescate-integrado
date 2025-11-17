@@ -44,8 +44,6 @@
                                     <th >Imagen</th>
                                     <th >Raza</th>
                                     <th >Estado</th>
-                                    <th >Adopción</th>
-                                    <th >Liberación</th>
 
                                         <th></th>
                                     </tr>
@@ -67,8 +65,6 @@
                                             </td>
                                             <td >{{ $animalFile->breed?->nombre }}</td>
                                             <td >{{ $animalFile->animalStatus?->nombre }}</td>
-                                            <td >{{ $animalFile->adopcion_id ? '#' . $animalFile->adopcion_id : '-' }}</td>
-                                            <td >{{ $animalFile->liberacion_id ? '#' . $animalFile->liberacion_id : '-' }}</td>
 
                                             <td>
                                                 <form action="{{ route('animal-files.destroy', $animalFile->id) }}" method="POST">

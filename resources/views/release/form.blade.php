@@ -16,6 +16,18 @@
             <input type="text" name="detalle" class="form-control @error('detalle') is-invalid @enderror" value="{{ old('detalle', $release?->detalle) }}" id="detalle" placeholder="Detalle">
             {!! $errors->first('detalle', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
+        <div class="form-group mb-2 mb20">
+            <label for="animal_file_id" class="form-label">{{ __('Animal (liberable)') }}</label>
+            <select name="animal_file_id" id="animal_file_id" class="form-control @error('animal_file_id') is-invalid @enderror">
+                <option value="">{{ __('Seleccione') }}</option>
+                @foreach(($animalFiles ?? []) as $af)
+                    <option value="{{ $af->id }}" {{ (string)old('animal_file_id', $release?->animal_file_id) === (string)$af->id ? 'selected' : '' }}>
+                        #{{ $af->id }} {{ $af->nombre ? '- ' . $af->nombre : '' }}
+                    </option>
+                @endforeach
+            </select>
+            {!! $errors->first('animal_file_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
         
         @if(!empty($release?->id))
         <div class="form-group mb-2 mb20">

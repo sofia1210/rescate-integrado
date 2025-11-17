@@ -14,15 +14,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property $imagen_url
  * @property $raza_id
  * @property $estado_id
- * @property $adopcion_id
- * @property $liberacion_id
  * @property $created_at
  * @property $updated_at
  *
- * @property Adoption $adoption
  * @property Species $species
  * @property AnimalStatus $animalStatus
- * @property Release $release
  * @property Animal $animal
  * @property AnimalType $animalType
  * @property Care[] $cares
@@ -39,17 +35,9 @@ class AnimalFile extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['animal_id', 'tipo_id', 'especie_id', 'imagen_url', 'raza_id', 'estado_id', 'adopcion_id', 'liberacion_id'];
+    protected $fillable = ['animal_id', 'tipo_id', 'especie_id', 'imagen_url', 'raza_id', 'estado_id'];
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function adoption()
-    {
-        return $this->belongsTo(\App\Models\Adoption::class, 'adopcion_id', 'id');
-    }
-    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -64,14 +52,6 @@ class AnimalFile extends Model
     public function animalStatus()
     {
         return $this->belongsTo(\App\Models\AnimalStatus::class, 'estado_id', 'id');
-    }
-    
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function release()
-    {
-        return $this->belongsTo(\App\Models\Release::class, 'liberacion_id', 'id');
     }
     
     /**
@@ -104,6 +84,22 @@ class AnimalFile extends Model
     public function cares()
     {
         return $this->hasMany(\App\Models\Care::class, 'hoja_animal_id', 'id');
+    }
+    
+    /**
+     * Relación 1:1 con Adoption por la nueva FK en adoptions
+     */
+    public function adoption()
+    {
+        return $this->hasOne(\App\Models\Adoption::class, 'animal_file_id', 'id');
+    }
+    
+    /**
+     * Relación 1:1 con Release por la nueva FK en releases
+     */
+    public function release()
+    {
+        return $this->hasOne(\App\Models\Release::class, 'animal_file_id', 'id');
     }
     
 }

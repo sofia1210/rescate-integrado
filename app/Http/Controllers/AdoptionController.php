@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Adoption;
+use App\Models\AnimalFile;
+use App\Models\AnimalType;
 use App\Models\Person;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,7 +32,15 @@ class AdoptionController extends Controller
     {
         $adoption = new Adoption();
         $people = Person::orderBy('nombre')->get(['id','nombre']);
-        return view('adoption.create', compact('adoption','people'));
+        $animalFiles = AnimalFile::query()
+            ->join('animal_types', 'animal_files.tipo_id', '=', 'animal_types.id')
+            ->leftJoin('adoptions', 'adoptions.animal_file_id', '=', 'animal_files.id')
+            ->join('animals', 'animal_files.animal_id', '=', 'animals.id')
+            ->where('animal_types.permite_adopcion', true)
+            ->whereNull('adoptions.animal_file_id')
+            ->orderBy('animals.nombre')
+            ->get(['animal_files.id as id', 'animals.nombre as nombre']);
+        return view('adoption.create', compact('adoption','people','animalFiles'));
     }
 
     /**
@@ -61,7 +71,18 @@ class AdoptionController extends Controller
     {
         $adoption = Adoption::find($id);
         $people = Person::orderBy('nombre')->get(['id','nombre']);
-        return view('adoption.edit', compact('adoption','people'));
+        $animalFiles = AnimalFile::query()
+            ->join('animal_types', 'animal_files.tipo_id', '=', 'animal_types.id')
+            ->leftJoin('adoptions', 'adoptions.animal_file_id', '=', 'animal_files.id')
+            ->join('animals', 'animal_files.animal_id', '=', 'animals.id')
+            ->where('animal_types.permite_adopcion', true)
+            ->where(function($q) use ($adoption) {
+                $q->whereNull('adoptions.animal_file_id')
+                  ->orWhere('adoptions.id', $adoption->id);
+            })
+            ->orderBy('animals.nombre')
+            ->get(['animal_files.id as id', 'animals.nombre as nombre']);
+        return view('adoption.edit', compact('adoption','people','animalFiles'));
     }
 
     /**

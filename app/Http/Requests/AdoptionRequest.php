@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AdoptionRequest extends FormRequest
 {
@@ -21,6 +22,7 @@ class AdoptionRequest extends FormRequest
      */
     public function rules(): array
     {
+        $id = $this->route('adoption')?->id;
         return [
 			'direccion' => 'nullable|string',
 			'detalle' => 'nullable|string',
@@ -28,6 +30,11 @@ class AdoptionRequest extends FormRequest
 			'longitud' => 'nullable|numeric',
 			'aprobada' => 'required|boolean',
 			'adoptante_id' => 'required',
+            'animal_file_id' => [
+                'required',
+                'exists:animal_files,id',
+                Rule::unique('adoptions', 'animal_file_id')->ignore($id),
+            ],
         ];
     }
 }
