@@ -24,7 +24,20 @@
                 <div class="mt-2"><a href="{{ asset('storage/' . $veterinarian->cv_documentado) }}" target="_blank">{{ __('Ver CV actual') }}</a></div>
             @endif
         </div>
-        
+        <div class="form-group mb-2 mb20">
+            <label for="aprobado" class="form-label">{{ __('Aprobado') }}</label>
+            <select name="aprobado" id="aprobado" class="form-control @error('aprobado') is-invalid @enderror">
+                <option value="">{{ __('Seleccione') }}</option>
+                <option value="1" {{ (string)old('aprobado', $veterinarian?->aprobado) === '1' ? 'selected' : '' }}>{{ __('Sí') }}</option>
+                <option value="0" {{ (string)old('aprobado', $veterinarian?->aprobado) === '0' ? 'selected' : '' }}>{{ __('No') }}</option>
+            </select>
+            {!! $errors->first('aprobado', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+        <div class="form-group mb-2 mb20">
+            <label for="motivo_revision" class="form-label">{{ __('Motivo de aprobación/rechazo') }}</label>
+            <textarea name="motivo_revision" id="motivo_revision" rows="3" class="form-control @error('motivo_revision') is-invalid @enderror" placeholder="{{ __('Motivo de la revisión') }}">{{ old('motivo_revision', $veterinarian?->motivo_revision) }}</textarea>
+            {!! $errors->first('motivo_revision', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>
 
     </div>
     <div class="col-md-12 mt20 mt-2">

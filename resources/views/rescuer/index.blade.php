@@ -38,6 +38,7 @@
                                         
 								<th >Persona</th>
 								<th >CV</th>
+								<th >Aprobado</th>
 
                                         <th></th>
                                     </tr>
@@ -55,6 +56,7 @@
                                                     -
                                                 @endif
                                             </td>
+									<td >{{ $rescuer->aprobado === null ? '-' : ($rescuer->aprobado ? 'Sí' : 'No') }}</td>
 
                                             <td>
                                                 <form action="{{ route('rescuers.destroy', $rescuer->id) }}" method="POST">

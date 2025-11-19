@@ -38,6 +38,7 @@
                                         
 									<th >Especialidad</th>
 								<th >CV</th>
+								<th >Aprobado</th>
 								<th >Persona</th>
 
                                         <th></th>
@@ -56,6 +57,7 @@
                                                     -
                                                 @endif
                                             </td>
+									<td >{{ $veterinarian->aprobado === null ? '-' : ($veterinarian->aprobado ? 'Sí' : 'No') }}</td>
 									<td >{{ $veterinarian->person?->nombre }}</td>
 
                                             <td>

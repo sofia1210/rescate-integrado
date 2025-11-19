@@ -32,7 +32,7 @@ class MedicalEvaluationController extends Controller
     {
         $medicalEvaluation = new MedicalEvaluation();
         $treatmentTypes = TreatmentType::orderBy('nombre')->get(['id','nombre']);
-        $veterinarians = Veterinarian::with('person')->orderBy('id')->get();
+        $veterinarians = Veterinarian::with('person')->where('aprobado', true)->orderBy('id')->get();
 
         return view('medical-evaluation.create', compact('medicalEvaluation','treatmentTypes','veterinarians'));
     }
@@ -45,7 +45,8 @@ class MedicalEvaluationController extends Controller
         $data = $request->validated();
         if ($request->hasFile('imagen')) {
             $path = $request->file('imagen')->store('evidencias/medical-evaluations', 'public');
-            $data['imagen_url'] = Storage::disk('public')->url($path);
+            // Guardar ruta relativa; la vista resolverá URL pública
+            $data['imagen_url'] = $path;
         }
         MedicalEvaluation::create($data);
 
@@ -70,7 +71,7 @@ class MedicalEvaluationController extends Controller
     {
         $medicalEvaluation = MedicalEvaluation::find($id);
         $treatmentTypes = TreatmentType::orderBy('nombre')->get(['id','nombre']);
-        $veterinarians = Veterinarian::with('person')->orderBy('id')->get();
+        $veterinarians = Veterinarian::with('person')->where('aprobado', true)->orderBy('id')->get();
 
         return view('medical-evaluation.edit', compact('medicalEvaluation','treatmentTypes','veterinarians'));
     }
@@ -83,7 +84,8 @@ class MedicalEvaluationController extends Controller
         $data = $request->validated();
         if ($request->hasFile('imagen')) {
             $path = $request->file('imagen')->store('evidencias/medical-evaluations', 'public');
-            $data['imagen_url'] = Storage::disk('public')->url($path);
+            // Guardar ruta relativa; la vista resolverá URL pública
+            $data['imagen_url'] = $path;
         }
         $medicalEvaluation->update($data);
 

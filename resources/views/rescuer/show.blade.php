@@ -32,6 +32,14 @@
                                         -
                                     @endif
                                 </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Aprobado:</strong>
+                                    {{ $rescuer->aprobado === null ? '-' : ($rescuer->aprobado ? 'Sí' : 'No') }}
+                                </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Motivo revisión:</strong>
+                                    {{ $rescuer->motivo_revision ?: '-' }}
+                                </div>
 
                     </div>
                 </div>

@@ -36,6 +36,16 @@
                                     <strong>Veterinario:</strong>
                                     {{ $medicalEvaluation->veterinarian?->person?->nombre ?? '-' }}
                                 </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Imagen:</strong>
+                                    @if(!empty($medicalEvaluation?->imagen_url))
+                                        <div class="mt-2">
+                                            <img src="{{ asset('storage/' . $medicalEvaluation->imagen_url) }}" alt="Imagen evaluación" style="max-height:240px;">
+                                        </div>
+                                    @else
+                                        -
+                                    @endif
+                                </div>
 
                     </div>
                 </div>

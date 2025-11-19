@@ -25,6 +25,8 @@ class RescuerRequest extends FormRequest
 			'persona_id' => 'required',
 			'cv_documentado' => 'nullable|string',
 			'cv' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'aprobado' => 'nullable|boolean',
+            'motivo_revision' => 'nullable|string',
         ];
     }
 }

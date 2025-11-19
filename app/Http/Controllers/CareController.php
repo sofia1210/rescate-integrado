@@ -52,7 +52,8 @@ class CareController extends Controller
         $data = $request->validated();
         if ($request->hasFile('imagen')) {
             $path = $request->file('imagen')->store('evidencias/cares', 'public');
-            $data['imagen_url'] = Storage::disk('public')->url($path);
+            // Guardar ruta relativa; la vista resolverá URL pública
+            $data['imagen_url'] = $path;
         }
         Care::create($data);
 
@@ -97,7 +98,8 @@ class CareController extends Controller
         $data = $request->validated();
         if ($request->hasFile('imagen')) {
             $path = $request->file('imagen')->store('evidencias/cares', 'public');
-            $data['imagen_url'] = Storage::disk('public')->url($path);
+            // Guardar ruta relativa; la vista resolverá URL pública
+            $data['imagen_url'] = $path;
         }
         $care->update($data);
 

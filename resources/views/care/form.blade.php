@@ -33,13 +33,19 @@
         </div>
         <div class="form-group mb-2 mb20">
             <label for="imagen" class="form-label">{{ __('Imagen (opcional)') }}</label>
-            <input type="file" name="imagen" id="imagen" class="form-control @error('imagen') is-invalid @enderror" accept="image/*">
-            {!! $errors->first('imagen', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-            @if(!empty($care?->imagen_url))
-                <div class="mt-2">
-                    <img src="{{ $care->imagen_url }}" alt="Imagen cuidado" style="max-height:120px;">
-                </div>
-            @endif
+            <div class="custom-file">
+                <input type="file" name="imagen" id="imagen" class="custom-file-input @error('imagen') is-invalid @enderror" accept="image/*">
+                <label class="custom-file-label" for="imagen">{{ __('Seleccionar imagen') }}</label>
+            </div>
+            {!! $errors->first('imagen', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
+            @php
+                $initialCareSrc = !empty($care?->imagen_url)
+                    ? asset('storage/' . $care->imagen_url)
+                    : null;
+            @endphp
+            <div class="mt-2">
+                <img id="preview-care-imagen" src="{{ $initialCareSrc }}" alt="Imagen cuidado" style="max-height:120px; {{ empty($initialCareSrc) ? 'display:none;' : '' }}">
+            </div>
         </div>
 
     </div>
@@ -47,3 +53,18 @@
         <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
     </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var input = document.getElementById('imagen');
+    var img = document.getElementById('preview-care-imagen');
+    if (input && img) {
+        input.addEventListener('change', function () {
+            if (this.files && this.files[0] && this.files[0].type.startsWith('image/')) {
+                var url = URL.createObjectURL(this.files[0]);
+                img.src = url;
+                img.style.display = '';
+            }
+        });
+    }
+});
+</script>

@@ -30,7 +30,7 @@ class TransferController extends Controller
     public function create(): View
     {
         $transfer = new Transfer();
-        $rescuers = Rescuer::with('person')->orderBy('id')->get();
+        $rescuers = Rescuer::with('person')->where('aprobado', true)->orderBy('id')->get();
         $centers = Center::orderBy('nombre')->get(['id','nombre']);
         return view('transfer.create', compact('transfer','rescuers','centers'));
     }
@@ -62,7 +62,7 @@ class TransferController extends Controller
     public function edit($id): View
     {
         $transfer = Transfer::find($id);
-        $rescuers = Rescuer::with('person')->orderBy('id')->get();
+        $rescuers = Rescuer::with('person')->where('aprobado', true)->orderBy('id')->get();
         $centers = Center::orderBy('nombre')->get(['id','nombre']);
         return view('transfer.edit', compact('transfer','rescuers','centers'));
     }

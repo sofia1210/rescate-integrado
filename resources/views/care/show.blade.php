@@ -36,6 +36,16 @@
                                     <strong>Fecha:</strong>
                                     {{ $care->fecha ? \Carbon\Carbon::parse($care->fecha)->format('d-m-Y') : '-' }}
                                 </div>
+                                <div class="form-group mb-2 mb20">
+                                    <strong>Imagen:</strong>
+                                    @if(!empty($care?->imagen_url))
+                                        <div class="mt-2">
+                                            <img src="{{ asset('storage/' . $care->imagen_url) }}" alt="Imagen cuidado" style="max-height:240px;">
+                                        </div>
+                                    @else
+                                        -
+                                    @endif
+                                </div>
 
                     </div>
                 </div>

@@ -28,7 +28,16 @@ class Rescuer extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['persona_id', 'cv_documentado'];
+    protected $fillable = ['persona_id', 'cv_documentado', 'aprobado', 'motivo_revision'];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'aprobado' => 'boolean',
+    ];
 
 
     /**
