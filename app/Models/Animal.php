@@ -46,7 +46,7 @@ class Animal extends Model
      */
     public function animalFiles()
     {
-        return $this->hasMany(\App\Models\AnimalFile::class, 'id', 'animal_id');
+        return $this->hasMany(\App\Models\AnimalFile::class, 'animal_id', 'id');
     }
     
 }

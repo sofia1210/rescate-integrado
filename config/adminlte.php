@@ -345,6 +345,21 @@ return [
             'icon' => 'fas fa-fw fa-paw',
         ],
         [
+            'text' => 'Registrar Animal (Transaccional)',
+            'url' => 'animal-records/create',
+            'icon' => 'fas fa-fw fa-link',
+        ],
+        [
+            'text' => 'Registrar Alimentación (Transaccional)',
+            'url' => 'animal-feeding-records/create',
+            'icon' => 'fas fa-fw fa-utensils',
+        ],
+        [
+            'text' => 'Historial de Animales',
+            'url' => 'animal-histories',
+            'icon' => 'fas fa-fw fa-history',
+        ],
+        [
             'text' => 'Hojas de Animales',
             'url' => 'animal-files',
             'icon' => 'fas fa-fw fa-paw',

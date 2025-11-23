@@ -1,18 +1,20 @@
 <div class="row padding-1 p-1">
     <div class="col-md-12">
         
-        <div class="form-group mb-2 mb20">
-            <label for="animal_id" class="form-label">{{ __('Animal') }}</label>
-            <select name="animal_id" id="animal_id" class="form-control @error('animal_id') is-invalid @enderror">
-                <option value="">{{ __('Seleccione') }}</option>
-                @foreach(($animals ?? []) as $a)
-                    <option value="{{ $a->id }}" {{ (string)old('animal_id', $animalFile?->animal_id) === (string)$a->id ? 'selected' : '' }}>
-                        #{{ $a->id }} {{ $a->nombre ? '- ' . $a->nombre : '' }}
-                    </option>
-                @endforeach
-            </select>
-            {!! $errors->first('animal_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
+        @if(($showAnimalSelect ?? true))
+            <div class="form-group mb-2 mb20">
+                <label for="animal_id" class="form-label">{{ __('Animal') }}</label>
+                <select name="animal_id" id="animal_id" class="form-control @error('animal_id') is-invalid @enderror">
+                    <option value="">{{ __('Seleccione') }}</option>
+                    @foreach(($animals ?? []) as $a)
+                        <option value="{{ $a->id }}" {{ (string)old('animal_id', $animalFile?->animal_id) === (string)$a->id ? 'selected' : '' }}>
+                            #{{ $a->id }} {{ $a->nombre ? '- ' . $a->nombre : '' }}
+                        </option>
+                    @endforeach
+                </select>
+                {!! $errors->first('animal_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+            </div>
+        @endif
         <div class="form-group mb-2 mb20">
             <label for="tipo_id" class="form-label">{{ __('Tipo de Animal') }}</label>
             <select name="tipo_id" id="tipo_id" class="form-control @error('tipo_id') is-invalid @enderror">
@@ -74,9 +76,11 @@
         
 
     </div>
-    <div class="col-md-12 mt20 mt-2">
-        <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
-    </div>
+    @if(($showSubmit ?? true))
+        <div class="col-md-12 mt20 mt-2">
+            <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
+        </div>
+    @endif
 </div>
 
 <script>

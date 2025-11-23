@@ -55,7 +55,7 @@ class ReportController extends Controller
         Report::create($data);
 
         return Redirect::route('reports.index')
-            ->with('success', 'Reporte creado correctamente.');
+            ->with('success', 'El hallazgo se registró correctamente.');
     }
 
     /**
@@ -92,7 +92,7 @@ class ReportController extends Controller
         $report->update($data);
 
         return Redirect::route('reports.index')
-            ->with('success', 'Reporte actualizado correctamente');
+            ->with('success', 'El hallazgo se actualizó correctamente');
     }
 
     public function destroy($id): RedirectResponse
@@ -100,6 +100,6 @@ class ReportController extends Controller
         Report::find($id)->delete();
 
         return Redirect::route('reports.index')
-            ->with('success', 'Reporte eliminado correctamente');
+            ->with('success', 'El hallazgo se eliminó correctamente');
     }
 }
