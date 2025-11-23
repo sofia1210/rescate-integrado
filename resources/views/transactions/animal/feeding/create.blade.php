@@ -14,6 +14,10 @@
                         <span class="card-title">{{ __('Registrar Alimentación (Care + CareFeeding + History)') }}</span>
                     </div>
                     <div class="card-body bg-white">
+                        <div class="callout callout-warning">
+                            <h5 class="mb-1"><i class="fas fa-utensils"></i> {{ __('Proceso transaccional de alimentación') }}</h5>
+                            <p class="mb-0">{{ __('Selecciona la Hoja y parámetros de alimentación; se registrará el cuidado y quedará en el historial.') }}</p>
+                        </div>
                         <form method="POST" action="{{ route('animal-feeding-transactions.store') }}" role="form">
                             @csrf
 

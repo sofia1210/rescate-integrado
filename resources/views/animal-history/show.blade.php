@@ -26,21 +26,34 @@
                             <strong>Observaciones:</strong>
                             @php
                                 $obs = $animalHistory->observaciones;
-                                $obsText = is_array($obs) ? ($obs['texto'] ?? json_encode($obs, JSON_UNESCAPED_UNICODE)) : ($obs ?? '-');
+                                $obsText = is_array($obs) ? ($obs['texto'] ?? null) : ($obs ?? null);
                             @endphp
-                            <div>{{ $obsText }}</div>
+                            <div>{{ $obsText ?: '-' }}</div>
                         </div>
-
-                        <hr />
 
                         <div class="row">
                             <div class="col-md-6">
-                                <h5>{{ __('Valores Nuevos') }}</h5>
-                                <pre style="white-space: pre-wrap">{{ json_encode($animalHistory->valores_nuevos, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) }}</pre>
+                                <div class="card card-outline card-info">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">{{ __('Cuidado registrado') }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-2"><span class="text-muted">{{ __('Descripción') }}:</span> {{ $mapped['care_desc'] ?: '-' }}</div>
+                                        <div class="mb-2"><span class="text-muted">{{ __('Fecha') }}:</span> {{ $mapped['care_fecha'] ?: '-' }}</div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <h5>{{ __('Valores Antiguos') }}</h5>
-                                <pre style="white-space: pre-wrap">{{ json_encode($animalHistory->valores_antiguos, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE) }}</pre>
+                                <div class="card card-outline card-success">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">{{ __('Detalle de alimentación') }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-2"><span class="text-muted">{{ __('Tipo') }}:</span> {{ $mapped['feeding_type'] ?: '-' }}</div>
+                                        <div class="mb-2"><span class="text-muted">{{ __('Frecuencia') }}:</span> {{ $mapped['feeding_frequency'] ?: '-' }}</div>
+                                        <div class="mb-2"><span class="text-muted">{{ __('Porción') }}:</span> {{ $mapped['feeding_portion'] ?: '-' }}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

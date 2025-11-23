@@ -14,6 +14,10 @@
                         <span class="card-title">{{ __('Registrar Animal + Hoja (Transacción única)') }}</span>
                     </div>
                     <div class="card-body bg-white">
+                        <div class="callout callout-info">
+                            <h5 class="mb-1"><i class="fas fa-link"></i> {{ __('Transacción combinada') }}</h5>
+                            <p class="mb-0">{{ __('Completa los datos y guarda para crear el Animal y su Hoja en una sola operación.') }}</p>
+                        </div>
                         <form method="POST" action="{{ route('animal-transactions.store') }}" role="form" enctype="multipart/form-data">
                             @csrf
 
