@@ -397,6 +397,26 @@ return [
             'url' => 'care-types',
             'icon' => 'fas fa-fw fa-paw',
         ],
+        [
+            'text' => 'Alimentación',
+            'url' => 'care-feedings',
+            'icon' => 'fas fa-fw fa-paw',
+        ],
+        [
+            'text' => 'Tipos de Alimentación',
+            'url' => 'feeding-types',
+            'icon' => 'fas fa-fw fa-paw',
+        ],
+        [
+            'text' => 'Frecuencias de Alimentación',
+            'url' => 'feeding-frequencies',
+            'icon' => 'fas fa-fw fa-paw',
+        ],
+        [
+            'text' => 'Porciones de Alimentación',
+            'url' => 'feeding-portions',
+            'icon' => 'fas fa-fw fa-paw',
+        ],
         ['header' => 'DISPOSICION'],
         [
             'text' => 'Centros',

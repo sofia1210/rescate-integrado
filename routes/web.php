@@ -22,6 +22,10 @@ use App\Http\Controllers\MedicalEvaluationController;
 use App\Http\Controllers\TreatmentTypeController;
 use App\Http\Controllers\RescuerController;
 use App\Http\Controllers\TransferController;
+use App\Http\Controllers\CareFeedingController;
+use App\Http\Controllers\FeedingTypeController;
+use App\Http\Controllers\FeedingFrequencyController;
+use App\Http\Controllers\FeedingPortionController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
@@ -53,3 +57,7 @@ Route::resource('medical-evaluations', MedicalEvaluationController::class);
 Route::resource('treatment-types', TreatmentTypeController::class);
 Route::resource('rescuers', RescuerController::class);
 Route::resource('transfers', TransferController::class);
+Route::resource('care-feedings', CareFeedingController::class);
+Route::resource('feeding-types', FeedingTypeController::class);
+Route::resource('feeding-frequencies', FeedingFrequencyController::class);
+Route::resource('feeding-portions', FeedingPortionController::class);

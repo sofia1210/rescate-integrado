@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\CareFeeding;
+use App\Models\Care;
+use App\Models\FeedingType;
+use App\Models\FeedingFrequency;
+use App\Models\FeedingPortion;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use App\Http\Requests\CareFeedingRequest;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+
+class CareFeedingController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index(Request $request): View
+    {
+        $careFeedings = CareFeeding::paginate();
+
+        return view('care-feeding.index', compact('careFeedings'))
+            ->with('i', ($request->input('page', 1) - 1) * $careFeedings->perPage());
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(): View
+    {
+        $careFeeding = new CareFeeding();
+
+		$careOptions = Care::orderByDesc('id')->get()->mapWithKeys(function (Care $care) {
+			$label = 'Cuidado #'.$care->id.(isset($care->fecha) ? ' - '.$care->fecha : '');
+			return [$care->id => $label];
+		});
+		$feedingTypeOptions = FeedingType::orderBy('nombre')->pluck('nombre', 'id');
+		$feedingFrequencyOptions = FeedingFrequency::orderBy('nombre')->pluck('nombre', 'id');
+		$feedingPortionOptions = FeedingPortion::orderBy('cantidad')->get()->mapWithKeys(function (FeedingPortion $portion) {
+			return [$portion->id => $portion->cantidad.' '.$portion->unidad];
+		});
+
+		return view('care-feeding.create', compact(
+			'careFeeding',
+			'careOptions',
+			'feedingTypeOptions',
+			'feedingFrequencyOptions',
+			'feedingPortionOptions'
+		));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(CareFeedingRequest $request): RedirectResponse
+    {
+        CareFeeding::create($request->validated());
+
+        return Redirect::route('care-feedings.index')
+            ->with('success', 'Cuidado de alimentación creado correctamente.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($id): View
+    {
+        $careFeeding = CareFeeding::find($id);
+
+        return view('care-feeding.show', compact('careFeeding'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit($id): View
+    {
+        $careFeeding = CareFeeding::find($id);
+
+		$careOptions = Care::orderByDesc('id')->get()->mapWithKeys(function (Care $care) {
+			$label = 'Cuidado #'.$care->id.(isset($care->fecha) ? ' - '.$care->fecha : '');
+			return [$care->id => $label];
+		});
+		$feedingTypeOptions = FeedingType::orderBy('nombre')->pluck('nombre', 'id');
+		$feedingFrequencyOptions = FeedingFrequency::orderBy('nombre')->pluck('nombre', 'id');
+		$feedingPortionOptions = FeedingPortion::orderBy('cantidad')->get()->mapWithKeys(function (FeedingPortion $portion) {
+			return [$portion->id => $portion->cantidad.' '.$portion->unidad];
+		});
+
+		return view('care-feeding.edit', compact(
+			'careFeeding',
+			'careOptions',
+			'feedingTypeOptions',
+			'feedingFrequencyOptions',
+			'feedingPortionOptions'
+		));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(CareFeedingRequest $request, CareFeeding $careFeeding): RedirectResponse
+    {
+        $careFeeding->update($request->validated());
+
+        return Redirect::route('care-feedings.index')
+            ->with('success', 'Cuidado de alimentación actualizado correctamente');
+    }
+
+    public function destroy($id): RedirectResponse
+    {
+        CareFeeding::find($id)->delete();
+
+        return Redirect::route('care-feedings.index')
+            ->with('success', 'Cuidado de alimentación eliminado correctamente');
+    }
+}

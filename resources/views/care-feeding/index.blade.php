@@ -1,0 +1,77 @@
+@extends('adminlte::page')
+
+@section('template_title')
+    {{ __('Care Feedings') }}
+@endsection
+
+@section('content')
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+
+                            <span id="card_title">
+                                {{ __('Care Feedings') }}
+                            </span>
+
+                             <div class="float-right">
+                                <a href="{{ route('care-feedings.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Create New') }}
+                                </a>
+                              </div>
+                        </div>
+                    </div>
+                    @if ($message = Session::get('success'))
+                        <div class="alert alert-success m-4">
+                            <p>{{ $message }}</p>
+                        </div>
+                    @endif
+
+                    <div class="card-body bg-white">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>No</th>
+                                        
+									<th >{{ __('Care Id') }}</th>
+									<th >{{ __('Feeding Type Id') }}</th>
+									<th >{{ __('Feeding Frequency Id') }}</th>
+									<th >{{ __('Feeding Portion Id') }}</th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($careFeedings as $careFeeding)
+                                        <tr>
+                                            <td>{{ ++$i }}</td>
+                                            
+										<td >{{ $careFeeding->care_id }}</td>
+										<td >{{ $careFeeding->feeding_type_id }}</td>
+										<td >{{ $careFeeding->feeding_frequency_id }}</td>
+										<td >{{ $careFeeding->feeding_portion_id }}</td>
+
+                                            <td>
+                                                <form action="{{ route('care-feedings.destroy', $careFeeding->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('care-feedings.show', $careFeeding->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('care-feedings.edit', $careFeeding->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('{{ __('¿Estás seguro de querer eliminar?') }}') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {!! $careFeedings->withQueryString()->links() !!}
+            </div>
+        </div>
+    </div>
+@endsection
