@@ -345,29 +345,9 @@ return [
             'icon' => 'fas fa-fw fa-paw',
         ],
         [
-            'text' => 'Registrar Animal (Transaccional)',
-            'url' => 'animal-records/create',
-            'icon' => 'fas fa-fw fa-link',
-        ],
-        [
-            'text' => 'Registrar Alimentación (Transaccional)',
-            'url' => 'animal-feeding-records/create',
-            'icon' => 'fas fa-fw fa-utensils',
-        ],
-        [
             'text' => 'Historial de Animales',
             'url' => 'animal-histories',
             'icon' => 'fas fa-fw fa-history',
-        ],
-        [
-            'text' => 'Registrar Evaluación Médica (Transaccional)',
-            'url' => 'medical-evaluation-transactions/create',
-            'icon' => 'fas fa-fw fa-stethoscope',
-        ],
-        [
-            'text' => 'Registrar Cuidado (Transaccional)',
-            'url' => 'animal-care-records/create',
-            'icon' => 'fas fa-fw fa-hand-holding-medical',
         ],
         [
             'text' => 'Hojas de Animales',

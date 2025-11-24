@@ -17,7 +17,7 @@
                             </span>
 
                              <div class="float-right">
-                                <a href="{{ route('care-feedings.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <a href="{{ route('animal-feeding-records.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Create New') }}
                                 </a>
                               </div>
@@ -36,10 +36,10 @@
                                     <tr>
                                         <th>No</th>
                                         
-									<th >{{ __('Care Id') }}</th>
-									<th >{{ __('Feeding Type Id') }}</th>
-									<th >{{ __('Feeding Frequency Id') }}</th>
-									<th >{{ __('Feeding Portion Id') }}</th>
+									<th >{{ __('Cuidado') }}</th>
+									<th >{{ __('Tipo de Alimentación') }}</th>
+									<th >{{ __('Frecuencia') }}</th>
+									<th >{{ __('Porción') }}</th>
 
                                         <th></th>
                                     </tr>
@@ -49,10 +49,13 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-										<td >{{ $careFeeding->care_id }}</td>
-										<td >{{ $careFeeding->feeding_type_id }}</td>
-										<td >{{ $careFeeding->feeding_frequency_id }}</td>
-										<td >{{ $careFeeding->feeding_portion_id }}</td>
+										<td >{{ $careFeeding->care?->descripcion ?? ('#'.$careFeeding->care_id) }}</td>
+										<td >{{ $careFeeding->feedingType?->nombre ?? ('#'.$careFeeding->feeding_type_id) }}</td>
+										<td >{{ $careFeeding->feedingFrequency?->nombre ?? ('#'.$careFeeding->feeding_frequency_id) }}</td>
+										<td >
+                                            @php($p = $careFeeding->feedingPortion)
+                                            {{ $p ? ($p->cantidad.' '.$p->unidad) : ('#'.$careFeeding->feeding_portion_id) }}
+                                        </td>
 
                                             <td>
                                                 <form action="{{ route('care-feedings.destroy', $careFeeding->id) }}" method="POST">
