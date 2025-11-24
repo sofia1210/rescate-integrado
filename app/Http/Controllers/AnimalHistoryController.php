@@ -26,12 +26,14 @@ class AnimalHistoryController extends Controller
 	public function show(AnimalHistory $animalHistory): View
 	{
 		$animalHistory->loadMissing(['animalFile.animal']);
-		$timeline = $this->timelineService->buildForAnimalFile($animalHistory->animal_file_id);
+        $timeline = $animalHistory->animal_file_id
+            ? $this->timelineService->buildForAnimalFile($animalHistory->animal_file_id)
+            : [];
 
-		return view('animal-history.show', [
-			'animalHistory' => $animalHistory,
-			'timeline' => $timeline,
-		]);
+        return view('animal-history.show', [
+            'animalHistory' => $animalHistory,
+            'timeline' => $timeline,
+        ]);
 	}
 }
 

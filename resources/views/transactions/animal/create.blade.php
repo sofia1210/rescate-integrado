@@ -48,7 +48,10 @@
                                                 </div>
                                             @endforeach
                                         </div>
-                                        <input type="hidden" name="reporte_id" id="reporte_id_hidden" value="{{ old('reporte_id') }}">
+                                        @if((($reportCards ?? collect())->count() === 0) && (($reports ?? collect())->count() === 0))
+                                            <div class="alert alert-info mt-2">{{ __('No hay hallazgos aprobados con cupo disponibles. Cree o apruebe un hallazgo primero.') }}</div>
+                                        @endif
+
                                         <div class="form-group mt-2">
                                             <label for="llegaron_cantidad" class="form-label">{{ __('Cantidad llegada (confirmación)') }}</label>
                                             <input type="number" min="1" class="form-control" id="llegaron_cantidad" name="llegaron_cantidad" value="{{ old('llegaron_cantidad', 1) }}" style="max-width: 160px;">
@@ -80,19 +83,16 @@
     </section>
 
     <style>
-        /* Oculta el select de reporte del partial en esta vista */
-        #report_select_wrap label[for="reporte_id"],
-        #report_select_wrap #reporte_id { display:none !important; }
         .report-card.active { border:2px solid #28a745; box-shadow: 0 0 0 2px rgba(40,167,69,.25); }
     </style>
     <script>
     document.addEventListener('DOMContentLoaded', function(){
-        const hidden = document.getElementById('reporte_id_hidden');
+        const select = document.getElementById('reporte_id');
         const cards = document.querySelectorAll('.report-card');
         cards.forEach(card => {
             card.addEventListener('click', function(){
                 const id = this.getAttribute('data-report-id');
-                hidden.value = id;
+                if (select) select.value = id;
                 cards.forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
             });
