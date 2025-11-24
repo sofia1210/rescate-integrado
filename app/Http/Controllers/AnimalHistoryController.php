@@ -15,13 +15,14 @@ class AnimalHistoryController extends Controller
 		$this->middleware('auth');
 	}
 
-	public function index(): View
-	{
-		$histories = $this->timelineService->latestPerAnimalFile();
+	public function index(\Illuminate\Http\Request $request): View
+    {
+        $order = $request->get('order') === 'asc' ? 'asc' : 'desc';
+        $histories = $this->timelineService->latestPerAnimalFileOrdered($order);
 
-		return view('animal-history.index', compact('histories'))
-			->with('i', (request()->input('page', 1) - 1) * $histories->perPage());
-	}
+        return view('animal-history.index', compact('histories'))
+            ->with('i', ($request->input('page', 1) - 1) * $histories->perPage());
+    }
 
 	public function show(AnimalHistory $animalHistory): View
 	{

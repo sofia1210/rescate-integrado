@@ -31,7 +31,8 @@
 
         <div class="form-group mb-2 mb20">
             <label for="observaciones" class="form-label">{{ __('Observaciones') }}</label>
-            <textarea name="observaciones" class="form-control @error('observaciones') is-invalid @enderror" id="observaciones" rows="3" placeholder="Observaciones">{{ old('observaciones', $report?->observaciones) }}</textarea>
+            <textarea name="observaciones" class="form-control @error('observaciones') is-invalid @enderror" id="observaciones" rows="4" maxlength="500" aria-describedby="observaciones_help" placeholder="Observaciones">{{ old('observaciones', $report?->observaciones) }}</textarea>
+            <small id="observaciones_help" class="form-text text-muted">{{ __('Máximo 500 caracteres') }} · <span id="obs_counter">0</span>/500</small>
             {!! $errors->first('observaciones', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
@@ -45,7 +46,7 @@
             <label class="form-label">{{ __('Ubicación (clic en el mapa)') }}</label>
             <div class="row">
                 <div class="col-12">
-                    <div id="mapid" style="height: 360px; border-radius: 4px;"></div>
+                    <div id="mapid" style="height: 360px; width: 100%; border-radius: 4px;"></div>
                 </div>
             </div>
             <input type="hidden" name="latitud" id="latitud" value="{{ old('latitud') }}">
@@ -83,29 +84,34 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('imagen');
-    input?.addEventListener('change', function(){
-        const file = this.files && this.files[0] ? this.files[0] : null;
-        const fileName = file ? file.name : '{{ __('Elegir imagen') }}';
-        const label = this.nextElementSibling;
-        if (label) label.textContent = fileName;
-        let preview = document.getElementById('imagen_preview');
-        if (!preview) {
-            const container = this.closest('.form-group');
-            preview = document.createElement('img');
-            preview.id = 'imagen_preview';
-            preview.style.maxHeight = '120px';
-            preview.style.display = 'none';
-            preview.className = 'mt-2';
-            container.appendChild(preview);
-        }
-        if (file && file.type.startsWith('image/')) {
-            preview.src = URL.createObjectURL(file);
-            preview.style.display = 'block';
-        } else if (preview) {
-            preview.style.display = 'none';
-        }
-    });
+  const input = document.getElementById('imagen');
+  input?.addEventListener('change', function(){
+    const file = this.files && this.files[0] ? this.files[0] : null;
+    const fileName = file ? file.name : '{{ __('Elegir imagen') }}';
+    const label = this.nextElementSibling;
+    if (label) label.textContent = fileName;
+    let preview = document.getElementById('imagen_preview');
+    if (!preview) {
+      const container = this.closest('.form-group');
+      preview = document.createElement('img');
+      preview.id = 'imagen_preview';
+      preview.style.maxHeight = '120px';
+      preview.style.display = 'none';
+      preview.className = 'mt-2';
+      container.appendChild(preview);
+    }
+    if (file && file.type && file.type.startsWith('image/')) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+    } else if (preview) {
+      preview.style.display = 'none';
+    }
+  });
+  const obs = document.getElementById('observaciones');
+  const counter = document.getElementById('obs_counter');
+  function updateCounter(){ if (obs && counter) counter.textContent = String(obs.value.length); }
+  obs?.addEventListener('input', updateCounter);
+  updateCounter();
 });
 </script>
 
@@ -115,13 +121,19 @@ document.addEventListener('DOMContentLoaded', function () {
 document.addEventListener('DOMContentLoaded', function () {
     // Mapa de ubicación del hallazgo (con geolocalización)
     window.initMapWithGeolocation({
-        mapId: 'mapid',
-        latInputId: 'latitud',
-        lonInputId: 'longitud',
-        dirInputId: 'direccion',
-        start: { lat: -17.7833, lon: -63.1821, zoom: 13 },
-        enableReverseGeocode: true,
+      mapId: 'mapid',
+      latInputId: 'latitud',
+      lonInputId: 'longitud',
+      dirInputId: 'direccion',
+      start: { lat: -17.7833, lon: -63.1821, zoom: 13 },
+      enableReverseGeocode: true,
     });
+    const latIn = document.getElementById('latitud');
+    const lonIn = document.getElementById('longitud');
+    if (latIn && lonIn && (!latIn.value || !lonIn.value)) {
+      latIn.value = '-17.7833';
+      lonIn.value = '-63.1821';
+    }
 
     const sel = document.getElementById('traslado_inmediato');
     const wrap = document.getElementById('centro_wrap');

@@ -39,6 +39,19 @@ class AnimalHistoryTimelineService
 			->paginate($perPage);
 	}
 
+	public function latestPerAnimalFileOrdered(string $order = 'desc', int $perPage = 20): LengthAwarePaginator
+	{
+		$latestIds = AnimalHistory::select(DB::raw('MAX(id) as id'))
+			->groupBy('animal_file_id')
+			->pluck('id');
+
+		$q = AnimalHistory::with(['animalFile.animal'])
+			->whereIn('id', $latestIds);
+		$order = strtolower($order) === 'asc' ? 'asc' : 'desc';
+		$q = $order === 'asc' ? $q->orderBy('id') : $q->orderByDesc('id');
+		return $q->paginate($perPage);
+	}
+
 	/**
 	 * Construye el timeline completo para una hoja de animal.
 	 *
@@ -50,6 +63,9 @@ class AnimalHistoryTimelineService
 			->orderByDesc('changed_at')
 			->orderByDesc('id')
 			->get();
+
+		$afRecord = AnimalFileModel::find($animalFileId);
+		$arrivalImage = $afRecord?->animal?->report?->imagen_url;
 
 		// Cargar catálogos para resolución de nombres
 		$statuses = AnimalStatus::all()->keyBy('id');
@@ -245,6 +261,9 @@ class AnimalHistoryTimelineService
 				];
 			}
 
+			if (!$imageUrl && !empty($arrivalImage)) {
+				$imageUrl = $arrivalImage;
+			}
 			if ($imageUrl) {
 				$item['image_url'] = $imageUrl;
 			}

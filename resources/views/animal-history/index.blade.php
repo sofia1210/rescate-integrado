@@ -14,6 +14,14 @@
                             <span id="card_title">
                                 {{ __('Historial de Animales') }}
                             </span>
+                            <form method="get" class="form-inline">
+                                <label for="order" class="mr-2">{{ __('Orden') }}</label>
+                                <select name="order" id="order" class="form-control" onchange="this.form.submit()">
+                                    @php($ord = request()->get('order'))
+                                    <option value="desc" {{ $ord!=='asc'?'selected':'' }}>{{ __('Más nuevo primero') }}</option>
+                                    <option value="asc" {{ $ord==='asc'?'selected':'' }}>{{ __('Más viejo primero') }}</option>
+                                </select>
+                            </form>
                         </div>
                     </div>
 
@@ -41,7 +49,7 @@
                                         <td>{{ ++$i }}</td>
                                         <td>#{{ $h->animal_file_id }}</td>
                                         <td>{{ $h->animalFile?->animal?->nombre ?? '-' }}</td>
-                                        <td>{{ $h->changed_at ?? '' }}</td>
+                                        <td>{{ $h->changed_at ? \Carbon\Carbon::parse($h->changed_at)->format('d-m-Y H:i') : '' }}</td>
                                         <td>
                                             {{ $descripcion ? Str::limit($descripcion, 60) : ($observTxt ? Str::limit($observTxt, 60) : '-') }}
                                         </td>
