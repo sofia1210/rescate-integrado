@@ -48,7 +48,11 @@
         @if(empty($report?->id))
         <div class="form-group mb-2 mb20">
             <label class="form-label">{{ __('Ubicación (clic en el mapa)') }}</label>
-            <div id="mapid" style="height: 300px; border-radius: 4px;"></div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div id="mapid" style="height: 300px; border-radius: 4px;"></div>
+                </div>
+            </div>
             <input type="hidden" name="latitud" id="latitud" value="{{ old('latitud') }}">
             <input type="hidden" name="longitud" id="longitud" value="{{ old('longitud') }}">
             <input type="hidden" name="direccion" id="direccion" value="{{ old('direccion') }}">
@@ -65,7 +69,11 @@
         </div>
         <div class="form-group mb-2 mb20" id="centro_wrap" style="display:none;">
             <label class="form-label">{{ __('Seleccione el centro de destino en el mapa') }}</label>
-            <div id="centers_map" style="height: 280px; border-radius: 4px; margin-bottom: 8px;"></div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div id="centers_map" style="height: 280px; border-radius: 4px; margin-bottom: 8px;"></div>
+                </div>
+            </div>
             <input type="hidden" name="centro_id" id="centro_id" value="{{ old('centro_id') }}">
             <div id="centers_legend" class="small text-muted"></div>
             {!! $errors->first('centro_id', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}

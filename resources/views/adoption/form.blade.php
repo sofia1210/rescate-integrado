@@ -3,7 +3,11 @@
         
         <div class="form-group mb-2 mb20">
             <label class="form-label">{{ __('Ubicación (clic en el mapa)') }}</label>
-            <div id="adoption_map" style="height: 300px; border-radius: 4px;"></div>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <div id="adoption_map" style="height: 300px; border-radius: 4px;"></div>
+                </div>
+            </div>
             <input type="hidden" name="latitud" id="latitud" value="{{ old('latitud', $adoption?->latitud) }}">
             <input type="hidden" name="longitud" id="longitud" value="{{ old('longitud', $adoption?->longitud) }}">
         </div>

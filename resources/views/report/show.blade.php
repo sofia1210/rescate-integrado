@@ -9,11 +9,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="float-left">
+                    <div class="card-header d-flex align-items-center">
+                        <div>
                             <span class="card-title">{{ __('Show') }} {{ __('Report') }}</span>
                         </div>
-                        <div class="float-right">
+                        <div class="ml-auto">
                             <a class="btn btn-primary btn-sm" href="{{ route('reports.index') }}"> {{ __('Back') }}</a>
                         </div>
                     </div>
@@ -59,7 +59,11 @@
                                 @if(!is_null($report->latitud) && !is_null($report->longitud))
                                 <div class="form-group mb-2 mb20">
                                     <strong>Ubicación:</strong>
-                                    <div id="report_map" style="height: 320px; border-radius: 6px; overflow: hidden;"></div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div id="report_map" style="height: 320px; border-radius: 6px; overflow: hidden;"></div>
+                                        </div>
+                                    </div>
                                 </div>
                                 @endif
 

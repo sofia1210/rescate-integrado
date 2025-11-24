@@ -9,11 +9,11 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="float-left">
+                    <div class="card-header d-flex align-items-center">
+                        <div>
                             <span class="card-title">{{ __('Show') }} {{ __('Adoption') }}</span>
                         </div>
-                        <div class="float-right">
+                        <div class="ml-auto">
                             <a class="btn btn-primary btn-sm" href="{{ route('adoptions.index') }}"> {{ __('Back') }}</a>
                         </div>
                     </div>
