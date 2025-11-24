@@ -29,14 +29,23 @@
                                         </div>
                                     </div>
                                     <div class="card-body">
-                                        @forelse(($t['details'] ?? []) as $d)
-                                            <div class="mb-2">
-                                                <span class="text-muted">{{ $d['label'] }}:</span>
-                                                <span>{{ $d['value'] }}</span>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                @forelse(($t['details'] ?? []) as $d)
+                                                    <div class="mb-2">
+                                                        <span class="text-muted">{{ $d['label'] }}:</span>
+                                                        <span>{{ $d['value'] }}</span>
+                                                    </div>
+                                                @empty
+                                                    <div class="text-muted">{{ __('Sin detalles') }}</div>
+                                                @endforelse
                                             </div>
-                                        @empty
-                                            <div class="text-muted">{{ __('Sin detalles') }}</div>
-                                        @endforelse
+                                            <div class="col-md-4 text-right">
+                                                @if(!empty($t['image_url']))
+                                                    <img src="{{ asset('storage/' . $t['image_url']) }}" alt="Imagen" style="max-height: 140px; width: auto;">
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             @endforeach

@@ -10,9 +10,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ReleaseRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Services\Animal\AnimalReleaseTransactionalService;
 
 class ReleaseController extends Controller
 {
+    public function __construct(
+        private readonly AnimalReleaseTransactionalService $releaseService
+    ) {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -47,7 +53,13 @@ class ReleaseController extends Controller
      */
     public function store(ReleaseRequest $request): RedirectResponse
     {
-        Release::create($request->validated());
+        try {
+            $this->releaseService->create($request->validated());
+        } catch (\DomainException $e) {
+            return Redirect::back()->withInput()->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            return Redirect::back()->withInput()->with('error', 'No se pudo registrar la liberación: '.$e->getMessage());
+        }
 
         return Redirect::route('releases.index')
             ->with('success', 'Liberación creada correctamente.');

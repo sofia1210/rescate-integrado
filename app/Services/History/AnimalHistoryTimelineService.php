@@ -9,6 +9,9 @@ use App\Models\FeedingPortion;
 use App\Models\FeedingType;
 use App\Models\TreatmentType;
 use App\Models\Veterinarian;
+use App\Models\Care;
+use App\Models\MedicalEvaluation;
+use Illuminate\Support\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -51,15 +54,27 @@ class AnimalHistoryTimelineService
 
 		$timeline = [];
 		foreach ($all as $h) {
+			$changed = $h->changed_at ? Carbon::parse($h->changed_at) : null;
+			$changedDate = $changed ? $changed->format('d-m-Y') : null;
+			$changedTime = $changed ? $changed->format('H:i') : null;
 			$item = [
 				'id' => $h->id,
-				'changed_at' => $h->changed_at,
+				'changed_at' => trim(($changedDate ?? '') . ($changedTime ? ' '.$changedTime : '')),
 				'title' => 'Actualización de historial',
 				'details' => [],
 			];
 
 			$old = $h->valores_antiguos ?? [];
 			$new = $h->valores_nuevos ?? [];
+			$imageUrl = null;
+
+			// Línea estándar de fecha y hora
+			if ($changedDate || $changedTime) {
+				$item['details'][] = [
+					'label' => 'Fecha/Hora',
+					'value' => trim('Fecha: '.($changedDate ?? '-') . '    ' . 'Hora: '.($changedTime ?? '-')),
+				];
+			}
 
 			// Cambio de estado
 			if (!empty($new['estado'])) {
@@ -76,12 +91,18 @@ class AnimalHistoryTimelineService
 				$em = $new['evaluacion_medica'];
 				$trat = isset($em['tratamiento_id']) ? ($treatments[$em['tratamiento_id']]->nombre ?? ('#'.$em['tratamiento_id'])) : null;
 				$vet = isset($em['veterinario_id']) ? ($vets[$em['veterinario_id']]->person->nombre ?? ('#'.$em['veterinario_id'])) : null;
+				// intentar obtener imagen desde la evaluación
+				if (!empty($em['id'])) {
+					$me = MedicalEvaluation::find($em['id']);
+					if ($me && $me->imagen_url) {
+						$imageUrl = $me->imagen_url;
+					}
+				}
 				$item['details'][] = [
 					'label' => 'Evaluación Médica',
 					'value' => implode(' | ', array_filter([
 						$trat ? ('Tratamiento: '.$trat) : null,
 						$vet ? ('Veterinario: '.$vet) : null,
-						!empty($em['fecha']) ? ('Fecha: '.$em['fecha']) : null,
 					])),
 				];
 			}
@@ -89,11 +110,23 @@ class AnimalHistoryTimelineService
 			// Cuidado genérico
 			if (!empty($new['care'])) {
 				$care = $new['care'];
+				// intentar obtener imagen desde el cuidado
+				if (!empty($care['id'])) {
+					$c = Care::find($care['id']);
+					if ($c && $c->imagen_url) {
+						$imageUrl = $c->imagen_url;
+					}
+				}
+				$careTypeText = null;
+				if (!empty($care['tipo_cuidado_id'])) {
+					// resolución perezosa: traer nombre desde DB solo si aparece en el historial (evita otro catálogo)
+					$careTypeText = 'Tipo: #'.$care['tipo_cuidado_id'];
+				}
 				$item['details'][] = [
 					'label' => 'Cuidado',
 					'value' => implode(' | ', array_filter([
 						!empty($care['descripcion']) ? $care['descripcion'] : null,
-						!empty($care['fecha']) ? ('Fecha: '.$care['fecha']) : null,
+						$careTypeText,
 					])),
 				];
 			}
@@ -125,6 +158,10 @@ class AnimalHistoryTimelineService
 					'label' => 'Observaciones',
 					'value' => $obs,
 				];
+			}
+
+			if ($imageUrl) {
+				$item['image_url'] = $imageUrl;
 			}
 
 			$timeline[] = $item;

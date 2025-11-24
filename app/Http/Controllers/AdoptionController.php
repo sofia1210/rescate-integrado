@@ -11,9 +11,15 @@ use Illuminate\Http\Request;
 use App\Http\Requests\AdoptionRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Services\Animal\AnimalAdoptionTransactionalService;
 
 class AdoptionController extends Controller
 {
+    public function __construct(
+        private readonly AnimalAdoptionTransactionalService $adoptionService
+    ) {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -48,7 +54,13 @@ class AdoptionController extends Controller
      */
     public function store(AdoptionRequest $request): RedirectResponse
     {
-        Adoption::create($request->validated());
+        try {
+            $this->adoptionService->create($request->validated());
+        } catch (\DomainException $e) {
+            return Redirect::back()->withInput()->with('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            return Redirect::back()->withInput()->with('error', 'No se pudo registrar la adopción: '.$e->getMessage());
+        }
 
         return Redirect::route('adoptions.index')
             ->with('success', 'Adopción creada correctamente.');

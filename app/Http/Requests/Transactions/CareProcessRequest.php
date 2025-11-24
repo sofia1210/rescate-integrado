@@ -4,7 +4,7 @@ namespace App\Http\Requests\Transactions;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MedicalEvaluationProcessRequest extends FormRequest
+class CareProcessRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -12,15 +12,13 @@ class MedicalEvaluationProcessRequest extends FormRequest
     }
 
     /**
-     * Validaciones para el proceso de evaluación médica transaccional.
+     * Validaciones para el proceso transaccional de cuidado.
      */
     public function rules(): array
     {
         return [
             'animal_file_id' => 'required|exists:animal_files,id',
-            'tratamiento_id' => 'nullable|exists:treatment_types,id',
-            'veterinario_id' => 'required|exists:veterinarians,id',
-            'estado_id' => 'required|exists:animal_statuses,id',
+            'tipo_cuidado_id' => 'required|exists:care_types,id',
             'descripcion' => 'nullable|string',
             'fecha' => 'nullable|date',
             'observaciones' => 'nullable|string',

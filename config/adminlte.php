@@ -335,7 +335,7 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],*/
         [
-            'text' => 'Reportes',
+            'text' => 'Hallazgos',
             'url' => 'reports',
             'icon' => 'fas fa-fw fa-file-alt',
         ],
@@ -363,6 +363,11 @@ return [
             'text' => 'Registrar Evaluación Médica (Transaccional)',
             'url' => 'medical-evaluation-transactions/create',
             'icon' => 'fas fa-fw fa-stethoscope',
+        ],
+        [
+            'text' => 'Registrar Cuidado (Transaccional)',
+            'url' => 'animal-care-records/create',
+            'icon' => 'fas fa-fw fa-hand-holding-medical',
         ],
         [
             'text' => 'Hojas de Animales',

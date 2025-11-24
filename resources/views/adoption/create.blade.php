@@ -14,6 +14,11 @@
                         <span class="card-title">{{ __('Create') }} {{ __('Adoption') }}</span>
                     </div>
                     <div class="card-body bg-white">
+                        @if ($message = Session::get('error'))
+                            <div class="alert alert-danger">
+                                <strong>{{ $message }}</strong>
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('adoptions.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 

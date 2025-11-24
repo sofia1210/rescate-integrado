@@ -22,7 +22,7 @@ class MedicalEvaluationRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'tratamiento_id' => 'required',
+			'tratamiento_id' => 'nullable|exists:treatment_types,id',
 			'descripcion' => 'string',
             'fecha' => 'nullable|date',
 			'veterinario_id' => 'required',

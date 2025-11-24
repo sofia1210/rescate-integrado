@@ -29,6 +29,7 @@ use App\Http\Controllers\FeedingPortionController;
 use App\Http\Controllers\Transactions\AnimalTransactionalController;
 use App\Http\Controllers\Transactions\AnimalFeedingTransactionalController;
 use App\Http\Controllers\Transactions\AnimalMedicalEvaluationTransactionalController;
+use App\Http\Controllers\Transactions\AnimalCareTransactionalController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AnimalHistoryController;
 
@@ -70,4 +71,5 @@ Route::resource('feeding-portions', FeedingPortionController::class);
 Route::resource('animal-records', AnimalTransactionalController::class)->middleware('auth');
 Route::resource('animal-feeding-records', AnimalFeedingTransactionalController::class)->middleware('auth');
 Route::resource('medical-evaluation-transactions', AnimalMedicalEvaluationTransactionalController::class)->middleware('auth');
+Route::resource('animal-care-records', AnimalCareTransactionalController::class)->middleware('auth');
 Route::resource('animal-histories', AnimalHistoryController::class)->only(['index','show'])->middleware('auth');
