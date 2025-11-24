@@ -21,8 +21,8 @@
                     <div class="card-body bg-white">
                         
                                 <div class="form-group mb-2 mb20">
-                                    <strong>Rescatista:</strong>
-                                    {{ $transfer->rescuer?->person?->nombre ?? '-' }}
+                                    <strong>Persona:</strong>
+                                    {{ $transfer->person?->nombre ?? '-' }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Centro:</strong>

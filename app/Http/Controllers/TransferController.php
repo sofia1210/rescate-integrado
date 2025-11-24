@@ -10,15 +10,23 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TransferRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Animal;
+use App\Services\Animal\AnimalTransferTransactionalService;
+use Illuminate\Http\JsonResponse;
 
 class TransferController extends Controller
 {
+    public function __construct(
+        private readonly AnimalTransferTransactionalService $transferService
+    ) {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request): View
     {
-        $transfers = Transfer::with(['rescuer.person','center'])->paginate();
+        $transfers = Transfer::with(['person','center'])->paginate();
 
         return view('transfer.index', compact('transfers'))
             ->with('i', ($request->input('page', 1) - 1) * $transfers->perPage());
@@ -32,7 +40,9 @@ class TransferController extends Controller
         $transfer = new Transfer();
         $rescuers = Rescuer::with('person')->where('aprobado', true)->orderBy('id')->get();
         $centers = Center::orderBy('nombre')->get(['id','nombre']);
-        return view('transfer.create', compact('transfer','rescuers','centers'));
+        $animals = Animal::orderByDesc('id')->get(['id','nombre']);
+        $people = \App\Models\Person::orderBy('nombre')->get(['id','nombre']);
+        return view('transfer.create', compact('transfer','rescuers','centers','animals','people'));
     }
 
     /**
@@ -40,7 +50,11 @@ class TransferController extends Controller
      */
     public function store(TransferRequest $request): RedirectResponse
     {
-        Transfer::create($request->validated());
+        try {
+            $this->transferService->create($request->validated());
+        } catch (\Throwable $e) {
+            return Redirect::back()->withInput()->with('error', 'No se pudo registrar el traslado: '.$e->getMessage());
+        }
 
         return Redirect::route('transfers.index')
             ->with('success', 'Transferencia creada correctamente.');
@@ -64,9 +78,24 @@ class TransferController extends Controller
         $transfer = Transfer::find($id);
         $rescuers = Rescuer::with('person')->where('aprobado', true)->orderBy('id')->get();
         $centers = Center::orderBy('nombre')->get(['id','nombre']);
-        return view('transfer.edit', compact('transfer','rescuers','centers'));
+        $animals = Animal::orderByDesc('id')->get(['id','nombre']);
+        $people = \App\Models\Person::orderBy('nombre')->get(['id','nombre']);
+        return view('transfer.edit', compact('transfer','rescuers','centers','animals','people'));
     }
 
+    public function currentCenterByAnimal(Animal $animal): JsonResponse
+    {
+        $last = \App\Models\Transfer::where('animal_id', $animal->id)->orderByDesc('id')->first();
+        $currentCenter = $last?->center;
+        $centers = Center::orderBy('nombre')->get(['id','nombre']);
+        $destinations = $centers->when($currentCenter, function ($c) use ($currentCenter) {
+            return $c->where('id', '!=', $currentCenter->id);
+        })->values();
+        return response()->json([
+            'current' => $currentCenter ? ['id' => $currentCenter->id, 'nombre' => $currentCenter->nombre] : null,
+            'destinations' => $destinations,
+        ]);
+    }
     /**
      * Update the specified resource in storage.
      */

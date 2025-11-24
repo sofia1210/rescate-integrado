@@ -7,15 +7,15 @@
             {!! $errors->first('nombre', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
-            <label for="direccion" class="form-label">{{ __('Direccion') }}</label>
-            <input type="text" name="direccion" class="form-control @error('direccion') is-invalid @enderror" value="{{ old('direccion', $center?->direccion) }}" id="direccion" placeholder="Direccion">
-            {!! $errors->first('direccion', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
-        <div class="form-group mb-2 mb20">
             <label class="form-label">{{ __('Ubicación (clic en el mapa)') }}</label>
             <div id="center_map" style="height: 300px; border-radius: 4px;"></div>
             <input type="hidden" name="latitud" id="latitud" value="{{ old('latitud', $center?->latitud) }}">
             <input type="hidden" name="longitud" id="longitud" value="{{ old('longitud', $center?->longitud) }}">
+        </div>
+        <div class="form-group mb-2 mb20">
+            <label for="direccion" class="form-label">{{ __('Direccion') }}</label>
+            <input type="text" name="direccion" class="form-control @error('direccion') is-invalid @enderror" value="{{ old('direccion', $center?->direccion) }}" id="direccion" placeholder="Direccion">
+            {!! $errors->first('direccion', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2 mb20">
             <label for="contacto" class="form-label">{{ __('Contacto') }}</label>
@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', function () {
         latInputId: 'latitud',
         lonInputId: 'longitud',
         start: { lat: -17.7833, lon: -63.1821, zoom: 13 },
-        enableReverseGeocode: false,
+        enableReverseGeocode: true,
+        addressInputId: 'direccion',
     });
 });
 </script>

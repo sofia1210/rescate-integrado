@@ -13,12 +13,25 @@
         </div>
         <div class="form-group mb-2 mb20">
             <label for="cv" class="form-label">{{ __('Archivo CV (PDF/DOC)') }}</label>
-            <input type="file" name="cv" accept=".pdf,.doc,.docx" class="form-control-file @error('cv') is-invalid @enderror" id="cv">
+            <div class="custom-file">
+                <input type="file" name="cv" accept=".pdf,.doc,.docx" class="custom-file-input @error('cv') is-invalid @enderror" id="cv">
+                <label class="custom-file-label" for="cv">{{ __('Seleccionar archivo') }}</label>
+            </div>
             {!! $errors->first('cv', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
             @if(!empty($rescuer?->cv_documentado))
                 <div class="mt-2"><a href="{{ asset('storage/' . $rescuer->cv_documentado) }}" target="_blank">{{ __('Ver CV actual') }}</a></div>
             @endif
         </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('cv');
+            input?.addEventListener('change', function(){
+                const fileName = this.files && this.files[0] ? this.files[0].name : '{{ __('Seleccionar archivo') }}';
+                const label = this.nextElementSibling;
+                if (label) label.textContent = fileName;
+            });
+        });
+        </script>
 
         <div class="form-group mb-2 mb20">
             <label for="aprobado" class="form-label">{{ __('Aprobado') }}</label>

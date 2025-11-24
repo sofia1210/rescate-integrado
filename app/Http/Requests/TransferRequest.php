@@ -22,9 +22,13 @@ class TransferRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'rescatista_id' => 'required',
-			'centro_id' => 'required',
-			'observaciones' => 'string',
+            'persona_id' => 'required|exists:people,id',
+			'centro_id' => 'required|exists:centers,id',
+			'observaciones' => 'nullable|string',
+            'primer_traslado' => 'required|boolean',
+            'animal_id' => 'nullable|exists:animals,id|required_if:primer_traslado,0',
+            'latitud' => 'nullable|numeric|required_if:primer_traslado,1',
+            'longitud' => 'nullable|numeric|required_if:primer_traslado,1',
         ];
     }
 }

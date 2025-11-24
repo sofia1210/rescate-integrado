@@ -36,7 +36,7 @@
                                     <tr>
                                         <th>No</th>
                                         
-								<th >Rescatista</th>
+								<th >Persona</th>
 								<th >Centro</th>
 									<th >Observaciones</th>
 
@@ -48,7 +48,7 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-									<td >{{ $transfer->rescuer?->person?->nombre ?? $transfer->rescuer?->id }}</td>
+									<td >{{ $transfer->person?->nombre ?? '-' }}</td>
 									<td >{{ $transfer->center?->nombre ?? $transfer->center?->id }}</td>
 										<td >{{ $transfer->observaciones }}</td>
 

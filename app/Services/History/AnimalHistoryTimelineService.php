@@ -11,6 +11,8 @@ use App\Models\TreatmentType;
 use App\Models\Veterinarian;
 use App\Models\Care;
 use App\Models\MedicalEvaluation;
+use App\Models\Person;
+use App\Models\Center;
 use Illuminate\Support\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -147,6 +149,22 @@ class AnimalHistoryTimelineService
 						$tipo ? ('Tipo: '.$tipo) : null,
 						$freq ? ('Frecuencia: '.$freq) : null,
 						$portion ? ('Porción: '.$portion) : null,
+					])),
+				];
+			}
+
+			// Traslado
+			if (!empty($new['transfer'])) {
+				$tr = $new['transfer'];
+				$personName = isset($tr['persona_id']) ? (Person::find($tr['persona_id'])->nombre ?? ('#'.$tr['persona_id'])) : null;
+				$centerName = isset($tr['centro_id']) ? (Center::find($tr['centro_id'])->nombre ?? ('#'.$tr['centro_id'])) : null;
+				$item['details'][] = [
+					'label' => 'Traslado',
+					'value' => implode(' | ', array_filter([
+						$personName ? ('Persona: '.$personName) : null,
+						$centerName ? ('Centro: '.$centerName) : null,
+						isset($tr['primer_traslado']) ? ('Primer traslado: '.($tr['primer_traslado'] ? 'Sí' : 'No')) : null,
+						!empty($tr['observaciones']) ? ('Obs: '.$tr['observaciones']) : null,
 					])),
 				];
 			}

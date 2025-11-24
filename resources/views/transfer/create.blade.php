@@ -14,6 +14,11 @@
                         <span class="card-title">{{ __('Create') }} {{ __('Transfer') }}</span>
                     </div>
                     <div class="card-body bg-white">
+                        @if ($message = Session::get('error'))
+                            <div class="alert alert-danger">
+                                <strong>{{ $message }}</strong>
+                            </div>
+                        @endif
                         <form method="POST" action="{{ route('transfers.store') }}"  role="form" enctype="multipart/form-data">
                             @csrf
 

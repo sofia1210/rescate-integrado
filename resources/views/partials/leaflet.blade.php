@@ -49,6 +49,55 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
     if (initLat && initLon) setMarker(initLat, initLon, true);
 
     // Prefer navigator.geolocation with high accuracy only when no initial coords
+    // --- TRACKING EN TIEMPO REAL ---
+    let watchId = null;
+
+    // Reinicia el watch cuando vuelves a la pestaña
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") {
+            // Evita saltos visuales
+            setTimeout(() => map.invalidateSize(), 150);
+
+            // Reiniciar watch
+            if (navigator.geolocation) {
+                if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+                watchId = navigator.geolocation.watchPosition(
+                    (pos) => {
+                        const lat = pos.coords.latitude.toFixed(6);
+                        const lon = pos.coords.longitude.toFixed(6);
+                        setMarker(lat, lon, true);
+                    },
+                    () => {},
+                    {
+                        enableHighAccuracy: true,
+                        maximumAge: 0,
+                        timeout: 5000,
+                    }
+                );
+            }
+        } else {
+            // Stop para ahorrar recursos
+            if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+            watchId = null;
+        }
+    });
+
+    if (navigator.geolocation) {
+        watchId = navigator.geolocation.watchPosition(
+            (pos) => {
+                const lat = pos.coords.latitude.toFixed(6);
+                const lon = pos.coords.longitude.toFixed(6);
+                setMarker(lat, lon, false);
+            },
+            () => {},
+            {
+                enableHighAccuracy: true,
+                maximumAge: 0,
+                timeout: 5000,
+            }
+        );
+    }
+
     if (!initLat || !initLon) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(

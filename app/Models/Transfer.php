@@ -29,7 +29,7 @@ class Transfer extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['rescatista_id', 'centro_id', 'observaciones'];
+    protected $fillable = ['persona_id', 'centro_id', 'observaciones', 'primer_traslado', 'animal_id', 'latitud', 'longitud'];
 
 
     /**
@@ -43,9 +43,9 @@ class Transfer extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function rescuer()
+    public function person()
     {
-        return $this->belongsTo(\App\Models\Rescuer::class, 'rescatista_id', 'id');
+        return $this->belongsTo(\App\Models\Person::class, 'persona_id', 'id');
     }
     
 }

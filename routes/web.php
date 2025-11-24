@@ -62,6 +62,7 @@ Route::resource('medical-evaluations', MedicalEvaluationController::class);
 Route::resource('treatment-types', TreatmentTypeController::class);
 Route::resource('rescuers', RescuerController::class);
 Route::resource('transfers', TransferController::class);
+Route::get('transfers/current-center/{animal}', [TransferController::class, 'currentCenterByAnimal'])->name('transfers.currentCenter');
 Route::resource('care-feedings', CareFeedingController::class);
 Route::resource('feeding-types', FeedingTypeController::class);
 Route::resource('feeding-frequencies', FeedingFrequencyController::class);
