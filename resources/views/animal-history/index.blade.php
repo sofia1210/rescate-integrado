@@ -34,8 +34,7 @@
                                 @foreach ($histories as $h)
                                     @php
                                         $nuevo = $h->valores_nuevos ?? [];
-                                        $care = $nuevo['care'] ?? [];
-                                        $descripcion = $care['descripcion'] ?? null;
+                                        $descripcion = $nuevo['care']['descripcion'] ?? null;
                                         $observTxt = is_array($h->observaciones ?? null) ? ($h->observaciones['texto'] ?? null) : null;
                                     @endphp
                                     <tr>
