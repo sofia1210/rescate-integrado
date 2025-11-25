@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <section class="content container-fluid page-pad">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -66,5 +66,6 @@
                 {!! $species->withQueryString()->links() !!}
             </div>
         </div>
-    </div>
+    </section>
+@include('partials.page-pad')
 @endsection

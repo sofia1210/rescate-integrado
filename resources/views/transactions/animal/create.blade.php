@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
+    <section class="content container-fluid page-pad">
         <div class="row">
             <div class="col-md-12">
 
@@ -81,6 +81,7 @@
             </div>
         </div>
     </section>
+    @include('partials.page-pad')
 
     <style>
         .report-card.active { border:2px solid #28a745; box-shadow: 0 0 0 2px rgba(40,167,69,.25); }

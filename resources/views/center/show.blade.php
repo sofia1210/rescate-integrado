@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
+    <section class="content container-fluid page-pad">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -53,6 +53,7 @@
         </div>
     </section>
 @include('partials.leaflet')
+@include('partials.page-pad')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var rawLat = @json($center->latitud);

@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid page-pad">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -17,7 +17,7 @@
                             <form method="get" class="form-inline">
                                 <label for="order" class="mr-2">{{ __('Orden') }}</label>
                                 <select name="order" id="order" class="form-control" onchange="this.form.submit()">
-                                    @php($ord = request()->get('order'))
+                                    @php $ord = request()->get('order'); @endphp
                                     <option value="desc" {{ $ord!=='asc'?'selected':'' }}>{{ __('Más nuevo primero') }}</option>
                                     <option value="asc" {{ $ord==='asc'?'selected':'' }}>{{ __('Más viejo primero') }}</option>
                                 </select>
@@ -40,18 +40,17 @@
                                 </thead>
                                 <tbody>
                                 @foreach ($histories as $h)
-                                    @php
-                                        $nuevo = $h->valores_nuevos ?? [];
-                                        $descripcion = $nuevo['care']['descripcion'] ?? null;
-                                        $observTxt = is_array($h->observaciones ?? null) ? ($h->observaciones['texto'] ?? null) : null;
-                                    @endphp
                                     <tr>
                                         <td>{{ ++$i }}</td>
                                         <td>#{{ $h->animal_file_id }}</td>
                                         <td>{{ $h->animalFile?->animal?->nombre ?? '-' }}</td>
                                         <td>{{ $h->changed_at ? \Carbon\Carbon::parse($h->changed_at)->format('d-m-Y H:i') : '' }}</td>
                                         <td>
-                                            {{ $descripcion ? Str::limit($descripcion, 60) : ($observTxt ? Str::limit($observTxt, 60) : '-') }}
+                                            @php
+                                                $desc = data_get($h->valores_nuevos, 'care.descripcion');
+                                                $obsText = is_array($h->observaciones ?? null) ? ($h->observaciones['texto'] ?? null) : ($h->observaciones ?? null);
+                                            @endphp
+                                            {{ $desc ? \Illuminate\Support\Str::limit($desc, 60) : ($obsText ? \Illuminate\Support\Str::limit($obsText, 60) : '-') }}
                                         </td>
                                         <td>
                                             <a class="btn btn-sm btn-primary" href="{{ route('animal-histories.show', $h->id) }}">
@@ -71,4 +70,6 @@
     </div>
 @endsection
 
+
+@include('partials.page-pad')
 

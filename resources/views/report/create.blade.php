@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <section class="content container-fluid pt-4" style="background-color:#f4f6f9;">
+    <section class="content container-fluid page-pad">
         <div class="row">
             <div class="col-md-12">
 
@@ -25,4 +25,5 @@
             </div>
         </div>
     </section>
+@include('partials.page-pad')
 @endsection

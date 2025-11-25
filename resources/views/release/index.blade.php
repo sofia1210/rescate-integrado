@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container-fluid page-pad">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card">
@@ -76,4 +76,5 @@
             </div>
         </div>
     </div>
+    @include('partials.page-pad')
 @endsection

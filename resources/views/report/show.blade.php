@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <section class="content container-fluid">
+    <section class="content container-fluid page-pad">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -92,4 +92,5 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script>
+@include('partials.page-pad')
 @endsection
