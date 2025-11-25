@@ -65,7 +65,7 @@ class AnimalHistoryTimelineService
 			->get();
 
 		$afRecord = AnimalFileModel::find($animalFileId);
-		$arrivalImage = $afRecord?->animal?->report?->imagen_url;
+		$arrivalImage = $afRecord?->animal?->report?->imagen_url; // no usar como fallback global
 
 		// Cargar catálogos para resolución de nombres
 		$statuses = AnimalStatus::all()->keyBy('id');
@@ -289,9 +289,6 @@ class AnimalHistoryTimelineService
 				];
 			}
 
-			if (!$imageUrl && !empty($arrivalImage)) {
-				$imageUrl = $arrivalImage;
-			}
 			if ($imageUrl) {
 				$item['image_url'] = $imageUrl;
 			}

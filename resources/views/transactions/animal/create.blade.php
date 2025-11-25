@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('template_title')
-    {{ __('Registrar Animal (Transaccional)') }}
+    {{ __('Registrar Animal') }}
 @endsection
 
 @section('content')
@@ -11,7 +11,7 @@
 
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">{{ __('Registrar Animal') }}</span>
+                        <span class="card-title">{{ __('Registrar Hoja de Vida del Animal') }}</span>
                     </div>
                     <div class="card-body bg-white">
                         <form method="POST" action="{{ route('animal-records.store') }}"  role="form" enctype="multipart/form-data">
@@ -23,7 +23,7 @@
                                     @foreach(($reportCards ?? []) as $rep)
                                         @php($available = max(0, ($rep->cantidad_animales - $rep->asignados)))
                                         <div class="card m-2 report-card" data-report-id="{{ $rep->id }}" data-available="{{ $available }}" data-cond-id="{{ $rep->condicion_inicial_id }}" data-cond-name="{{ $rep->condicion_nombre }}" data-obs="{{ e($rep->observaciones) }}" style="width: 200px; cursor: pointer;">
-                                            <div class="card-img-top" style="height:110px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#f7f7f7;">
+                                            <div class="card-img-top mt-3" style="height:110px; overflow:hidden; display:flex; align-items:center; justify-content:center; ">
                                                 @if(!empty($rep->imagen_url))
                                                     <img src="{{ asset('storage/'.$rep->imagen_url) }}" alt="#{{ $rep->id }}" style="max-height:100%; max-width:100%;">
                                                 @else

@@ -358,21 +358,21 @@ return [
             'url' => 'animal-statuses',
             'icon' => 'fas fa-fw fa-paw',
         ],
-        [
+        /*[
             'text' => 'Tipos de Animales',
             'url' => 'animal-types',
             'icon' => 'fas fa-fw fa-paw',
-        ],
+        ],*/
         [
             'text' => 'Especies',
             'url' => 'species',
             'icon' => 'fas fa-fw fa-paw',
         ],
-        [
+        /*[
             'text' => 'Razas',
             'url' => 'breeds',
             'icon' => 'fas fa-fw fa-paw',
-        ],
+        ],*/
         
         ['header' => 'DIAGNOSTICO'],
         [
