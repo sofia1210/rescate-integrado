@@ -12,12 +12,16 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use App\Services\Animal\AnimalTransferTransactionalService;
+use App\Services\Report\ReportUrgencyService;
+use App\Models\AnimalCondition;
+use App\Models\IncidentType;
 use App\Models\AnimalHistory;
 
 class ReportController extends Controller
 {
     public function __construct(
-        private readonly AnimalTransferTransactionalService $transferService
+        private readonly AnimalTransferTransactionalService $transferService,
+        private readonly ReportUrgencyService $urgencyService
     ) {
         $this->middleware('auth');
     }
@@ -40,8 +44,10 @@ class ReportController extends Controller
         $report = new Report();
 
         $centers = Center::orderBy('nombre')->get(['id','nombre','latitud','longitud']);
+        $conditions = AnimalCondition::where('activo', true)->orderBy('nombre')->get(['id','nombre']);
+        $incidentTypes = IncidentType::where('activo', true)->orderBy('nombre')->get(['id','nombre']);
 
-        return view('report.create', compact('report','centers'));
+        return view('report.create', compact('report','centers','conditions','incidentTypes'));
     }
 
     /**
@@ -55,12 +61,17 @@ class ReportController extends Controller
         $personId = Person::where('usuario_id', Auth::id())->value('id');
         $data['persona_id'] = $personId;
         $data['aprobado'] = 0;
+        // Default cantidad if not provided
+        if (empty($data['cantidad_animales'])) {
+            $data['cantidad_animales'] = 1;
+        }
 
         if ($request->hasFile('imagen')) {
             $path = $request->file('imagen')->store('reports', 'public');
             $data['imagen_url'] = $path;
         }
-        // Accept lat/long/address from form (already validated as nullable)
+        // Calcular urgencia
+        $data['urgencia'] = $this->urgencyService->compute($data);
 
         $report = Report::create($data);
 
@@ -75,6 +86,13 @@ class ReportController extends Controller
                 'direccion' => $report->direccion,
                 'latitud' => $report->latitud,
                 'longitud' => $report->longitud,
+                'condicion_inicial_id' => $report->condicion_inicial_id,
+                'tipo_incidente_id' => $report->tipo_incidente_id,
+                'tamano' => $report->tamano,
+                'puede_moverse' => $report->puede_moverse,
+                'urgencia' => $report->urgencia,
+                'cantidad_animales' => $report->cantidad_animales,
+                'imagen_url' => $report->imagen_url,
             ],
         ];
         $hist->observaciones = ['texto' => $report->observaciones ?? 'Registro de reporte'];
@@ -117,7 +135,10 @@ class ReportController extends Controller
     {
         $report = Report::find($id);
 
-        return view('report.edit', compact('report'));
+        $conditions = AnimalCondition::where('activo', true)->orderBy('nombre')->get(['id','nombre']);
+        $incidentTypes = IncidentType::where('activo', true)->orderBy('nombre')->get(['id','nombre']);
+
+        return view('report.edit', compact('report','conditions','incidentTypes'));
     }
 
     /**
@@ -130,6 +151,8 @@ class ReportController extends Controller
             $path = $request->file('imagen')->store('reports', 'public');
             $data['imagen_url'] = $path;
         }
+        // Recalcular urgencia si cambian parámetros
+        $data['urgencia'] = $this->urgencyService->compute(array_merge($report->toArray(), $data));
 
         $report->update($data);
 

@@ -106,6 +106,17 @@ class AnimalHistoryTimelineService
 						$imageUrl = $reportModel->imagen_url;
 					}
 				}
+                // Resolver catálogos si llegan por JSON
+                $condText = null;
+                if (!empty($rp['condicion_inicial_id'])) {
+                    $condModel = \App\Models\AnimalCondition::find($rp['condicion_inicial_id']);
+                    $condText = $condModel?->nombre ?? ('#'.$rp['condicion_inicial_id']);
+                }
+                $incText = null;
+                if (!empty($rp['tipo_incidente_id'])) {
+                    $incModel = \App\Models\IncidentType::find($rp['tipo_incidente_id']);
+                    $incText = $incModel?->nombre ?? ('#'.$rp['tipo_incidente_id']);
+                }
 				$item['details'][] = [
 					'label' => 'Detalle',
 					'value' => implode(' | ', array_filter([
@@ -113,8 +124,25 @@ class AnimalHistoryTimelineService
 						$personName ? ('Reportado por: '.$personName) : null,
 						!empty($rp['direccion']) ? ('Dirección: '.$rp['direccion']) : null,
 						(isset($rp['latitud']) && isset($rp['longitud'])) ? ('GPS: '.$rp['latitud'].','.$rp['longitud']) : null,
+                        !empty($rp['cantidad_animales']) ? ('Cantidad aprox: '.$rp['cantidad_animales']) : null,
 					])),
 				];
+                if ($condText) {
+                    $item['details'][] = ['label' => 'Condición', 'value' => $condText];
+                }
+                if ($incText) {
+                    $item['details'][] = ['label' => 'Incidente', 'value' => $incText];
+                }
+                if (array_key_exists('tamano', $rp)) {
+                    $mapSize = ['pequeno' => 'Pequeño', 'mediano' => 'Mediano', 'grande' => 'Grande'];
+                    $item['details'][] = ['label' => 'Tamaño', 'value' => $mapSize[$rp['tamano']] ?? (string)$rp['tamano']];
+                }
+                if (array_key_exists('puede_moverse', $rp)) {
+                    $item['details'][] = ['label' => '¿Puede moverse?', 'value' => ($rp['puede_moverse'] ? 'Sí' : 'No')];
+                }
+                if (!empty($rp['urgencia'])) {
+                    $item['details'][] = ['label' => 'Urgencia', 'value' => (string)$rp['urgencia'].'/5'];
+                }
 			}
 
 			// Cambio de estado

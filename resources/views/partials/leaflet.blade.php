@@ -27,6 +27,7 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
     let marker = null;
     let userLocked = false; // si el usuario fija manualmente la posición, no sobrescribir con geolocalización
+    let hasCentered = false; // centrar/zoom solo la primera vez por geolocalización
 
     function setMarker(lat, lon, setView = false, fromUser = false) {
         if (marker) map.removeLayer(marker);
@@ -72,7 +73,8 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
                         if (userLocked) return;
                         const lat = pos.coords.latitude.toFixed(6);
                         const lon = pos.coords.longitude.toFixed(6);
-                        setMarker(lat, lon, true, false);
+                        setMarker(lat, lon, !hasCentered, false);
+                        hasCentered = true;
                     },
                     () => {},
                     {
@@ -95,7 +97,8 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
                 if (userLocked) return;
                 const lat = pos.coords.latitude.toFixed(6);
                 const lon = pos.coords.longitude.toFixed(6);
-                setMarker(lat, lon, false, false);
+                setMarker(lat, lon, !hasCentered, false);
+                hasCentered = true;
             },
             () => {},
             {

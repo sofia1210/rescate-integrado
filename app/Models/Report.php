@@ -31,7 +31,22 @@ class Report extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['persona_id', 'aprobado', 'imagen_url', 'observaciones', 'cantidad_animales', 'latitud', 'longitud', 'direccion'];
+    protected $fillable = [
+        'persona_id',
+        'aprobado',
+        'imagen_url',
+        'observaciones',
+        'cantidad_animales',
+        'latitud',
+        'longitud',
+        'direccion',
+        // nuevos campos parametrizables
+        'condicion_inicial_id',
+        'tipo_incidente_id',
+        'tamano',
+        'puede_moverse',
+        'urgencia',
+    ];
 
 
     /**
@@ -64,5 +79,21 @@ class Report extends Model
     public function animals()
     {
         return $this->hasMany(\App\Models\Animal::class, 'reporte_id', 'id');
+    }
+
+    /**
+     * Condición observada (catálogo)
+     */
+    public function condicionInicial()
+    {
+        return $this->belongsTo(\App\Models\AnimalCondition::class, 'condicion_inicial_id', 'id');
+    }
+
+    /**
+     * Tipo de incidente (catálogo)
+     */
+    public function incidentType()
+    {
+        return $this->belongsTo(\App\Models\IncidentType::class, 'tipo_incidente_id', 'id');
     }
 }

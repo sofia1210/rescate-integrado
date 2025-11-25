@@ -20,7 +20,10 @@
 
         <div class="form-group mb-2 mb20">
             <label for="imagen" class="form-label">{{ __('Imagen') }}</label>
-            <input type="file" accept="image/*" name="imagen" class="form-control @error('imagen') is-invalid @enderror" id="imagen">
+            <div class="custom-file">
+                <input type="file" accept="image/*" name="imagen" class="custom-file-input @error('imagen') is-invalid @enderror" id="imagen">
+                <label class="custom-file-label" for="imagen" data-browse="Subir">Subir la imagen del animal</label>
+            </div>
             {!! $errors->first('imagen', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
             @if(!empty($report?->imagen_url))
                 <div class="mt-2">
@@ -29,17 +32,75 @@
             @endif
         </div>
 
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group mb-2 mb20">
+                    <label for="condicion_inicial_id" class="form-label">{{ __('Estado inicial del animal') }}</label>
+                    <select name="condicion_inicial_id" id="condicion_inicial_id" class="form-control @error('condicion_inicial_id') is-invalid @enderror">
+                        <option value="">{{ __('Seleccione...') }}</option>
+                        @foreach(($conditions ?? []) as $c)
+                            @php($condLabel = $c->nombre === 'Desconocido' ? ($c->nombre.' (especificar en Observaciones)') : $c->nombre)
+                            <option value="{{ $c->id }}" {{ (string)old('condicion_inicial_id', $report?->condicion_inicial_id) === (string)$c->id ? 'selected' : '' }}>{{ $condLabel }}</option>
+                        @endforeach
+                    </select>
+                    {!! $errors->first('condicion_inicial_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group mb-2 mb20">
+                    <label for="tipo_incidente_id" class="form-label">{{ __('Tipo de incidente') }}</label>
+                    <select name="tipo_incidente_id" id="tipo_incidente_id" class="form-control @error('tipo_incidente_id') is-invalid @enderror">
+                        <option value="">{{ __('Seleccione...') }}</option>
+                        @foreach(($incidentTypes ?? []) as $it)
+                            @php($incLabel = $it->nombre === 'Otro' ? ($it->nombre.' (especificar en Observaciones)') : $it->nombre)
+                            <option value="{{ $it->id }}" {{ (string)old('tipo_incidente_id', $report?->tipo_incidente_id) === (string)$it->id ? 'selected' : '' }}>{{ $incLabel }}</option>
+                        @endforeach
+                    </select>
+                    {!! $errors->first('tipo_incidente_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group mb-2 mb20">
+            <label class="form-label d-block">{{ __('Tamaño del animal') }}</label>
+            @php($tam = old('tamano', $report?->tamano))
+            <div class="icheck-primary d-inline mr-3">
+                <input type="radio" id="tamano_peq" name="tamano" value="pequeno" {{ $tam==='pequeno' ? 'checked' : '' }}>
+                <label for="tamano_peq">{{ __('Pequeño') }}</label>
+            </div>
+            <div class="icheck-primary d-inline mr-3">
+                <input type="radio" id="tamano_med" name="tamano" value="mediano" {{ $tam==='mediano' ? 'checked' : '' }}>
+                <label for="tamano_med">{{ __('Mediano') }}</label>
+            </div>
+            <div class="icheck-primary d-inline">
+                <input type="radio" id="tamano_gra" name="tamano" value="grande" {{ $tam==='grande' ? 'checked' : '' }}>
+                <label for="tamano_gra">{{ __('Grande') }}</label>
+            </div>
+            {!! $errors->first('tamano', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+
+        <div class="form-group mb-2 mb20">
+            <label class="form-label d-block">{{ __('¿Puede moverse?') }}</label>
+            @php($pm = old('puede_moverse', is_null($report?->puede_moverse) ? '' : (int)$report->puede_moverse))
+            <div class="icheck-primary d-inline mr-3">
+                <input type="radio" id="moverse_si" name="puede_moverse" value="1" {{ (string)$pm === '1' ? 'checked' : '' }}>
+                <label for="moverse_si">{{ __('Sí') }}</label>
+            </div>
+            <div class="icheck-primary d-inline">
+                <input type="radio" id="moverse_no" name="puede_moverse" value="0" {{ (string)$pm === '0' ? 'checked' : '' }}>
+                <label for="moverse_no">{{ __('No') }}</label>
+            </div>
+            {!! $errors->first('puede_moverse', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
+        </div>
+
         <div class="form-group mb-2 mb20">
             <label for="observaciones" class="form-label">{{ __('Observaciones') }}</label>
             <textarea name="observaciones" class="form-control @error('observaciones') is-invalid @enderror" id="observaciones" rows="4" maxlength="500" aria-describedby="observaciones_help" placeholder="Observaciones">{{ old('observaciones', $report?->observaciones) }}</textarea>
             <small id="observaciones_help" class="form-text text-muted">{{ __('Máximo 500 caracteres') }} · <span id="obs_counter">0</span>/500</small>
             {!! $errors->first('observaciones', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="form-group mb-2 mb20">
-            <label for="cantidad_animales" class="form-label">{{ __('Cantidad de Animales') }}</label>
-            <input type="number" min="1" name="cantidad_animales" class="form-control @error('cantidad_animales') is-invalid @enderror" value="{{ old('cantidad_animales', $report?->cantidad_animales ?? 1) }}" id="cantidad_animales" placeholder="1">
-            {!! $errors->first('cantidad_animales', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
+        <!-- Campo cantidad oculto por simplicidad de UI (se usará valor por defecto en backend) -->
+        <input type="hidden" name="cantidad_animales" value="{{ old('cantidad_animales', $report?->cantidad_animales ?? 1) }}">
 
         @if(empty($report?->id))
         <div class="form-group mb-2 mb20">
@@ -66,8 +127,8 @@
         <div class="form-group mb-2 mb20" id="centro_wrap" style="display:none;">
             <label class="form-label">{{ __('Seleccione el centro de destino en el mapa') }}</label>
             <div class="row">
-                <div class="col-12 col-md-6">
-                    <div id="centers_map" style="height: 280px; border-radius: 4px; margin-bottom: 8px;"></div>
+                <div class="col-12">
+                    <div id="centers_map" style="height: 320px; width: 100%; border-radius: 4px; margin-bottom: 8px;"></div>
                 </div>
             </div>
             <input type="hidden" name="centro_id" id="centro_id" value="{{ old('centro_id') }}">
@@ -87,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const input = document.getElementById('imagen');
   input?.addEventListener('change', function(){
     const file = this.files && this.files[0] ? this.files[0] : null;
-    const fileName = file ? file.name : '{{ __('Elegir imagen') }}';
+    const fileName = file ? file.name : 'Subir';
     const label = this.nextElementSibling;
     if (label) label.textContent = fileName;
     let preview = document.getElementById('imagen_preview');
@@ -112,6 +173,27 @@ document.addEventListener('DOMContentLoaded', function () {
   function updateCounter(){ if (obs && counter) counter.textContent = String(obs.value.length); }
   obs?.addEventListener('input', updateCounter);
   updateCounter();
+
+  // Mostrar aviso cuando selección requiera Observaciones
+  const condSel = document.getElementById('condicion_inicial_id');
+  const incSel = document.getElementById('tipo_incidente_id');
+  let warnEl = document.getElementById('obs_required_warn');
+  if (!warnEl && obs) {
+    warnEl = document.createElement('div');
+    warnEl.id = 'obs_required_warn';
+    warnEl.className = 'small text-warning mt-1';
+    warnEl.style.display = 'none';
+    obs.parentElement?.appendChild(warnEl);
+  }
+  function toggleObsWarn(){
+    const condText = condSel?.options?.[condSel.selectedIndex || 0]?.text || '';
+    const incText = incSel?.options?.[incSel.selectedIndex || 0]?.text || '';
+    const must = (condText.includes('Desconocido')) || (incText.startsWith('Otro'));
+    
+  }
+  condSel?.addEventListener('change', toggleObsWarn);
+  incSel?.addEventListener('change', toggleObsWarn);
+  toggleObsWarn();
 });
 </script>
 
@@ -150,39 +232,106 @@ document.addEventListener('DOMContentLoaded', function () {
         centersData.forEach((c) => {
             if (c.latitud && c.longitud) {
                 const m = L.marker([c.latitud, c.longitud]).addTo(centersMap);
-                m.bindPopup(`<strong>${c.nombre}</strong>`);
+                m.bindTooltip(`${c.nombre}`, {
+                    permanent: true,
+                    direction: 'top',
+                    offset: [0, -10],
+                    opacity: 0.9,
+                    className: 'center-tooltip'
+                });
                 m.on('click', () => {
                     selectedInput.value = c.id;
                     highlightLegend(c.id);
+                    highlightMarker(c.id);
                 });
                 centersMarkers.push({ id: c.id, marker: m });
             }
         });
-        // build legend
-        if (legend) {
+        // build legend with names only
+        /*if (legend) {
             legend.innerHTML = '';
             centersData.forEach(c => {
-                const span = document.createElement('span');
-                span.textContent = `#${c.id} ${c.nombre}`;
-                span.style.cursor = 'pointer';
-                span.style.display = 'inline-block';
-                span.style.marginRight = '10px';
-                span.onclick = () => {
+                const item = document.createElement('div');
+                item.className = 'center-legend-item';
+                item.style.cursor = 'pointer';
+                item.style.display = 'inline-flex';
+                item.style.alignItems = 'center';
+                item.style.marginRight = '12px';
+                const dot = document.createElement('span');
+                dot.style.backgroundColor = '#3388ff';
+                dot.style.width = '10px';
+                dot.style.height = '10px';
+                dot.style.borderRadius = '50%';
+                dot.style.display = 'inline-block';
+                dot.style.marginRight = '6px';
+                const text = document.createElement('span');
+                text.textContent = c.nombre;
+                item.appendChild(dot);
+                item.appendChild(text);
+                item.onclick = () => {
                     if (c.latitud && c.longitud) {
                         centersMap.setView([c.latitud, c.longitud], 15);
                         document.getElementById('centro_id').value = c.id;
                         highlightLegend(c.id);
                     }
                 };
-                span.id = `legend_center_${c.id}`;
-                legend.appendChild(span);
+                item.id = `legend_center_${c.id}`;
+                legend.appendChild(item);
             });
-        }
+            // preselect if a center was already chosen (old input)
+            const pre = selectedInput && selectedInput.value ? selectedInput.value : null;
+            if (pre) {
+                highlightLegend(pre);
+                highlightMarker(pre);
+                const chosen = centersData.find(cc => String(cc.id) === String(pre));
+                if (chosen && chosen.latitud && chosen.longitud) {
+                    centersMap.setView([chosen.latitud, chosen.longitud], 15);
+                }
+            } else {
+                // choose nearest center to reported location if available
+                const rptLatEl = document.getElementById('latitud');
+                const rptLonEl = document.getElementById('longitud');
+                const rptLat = rptLatEl && rptLatEl.value ? parseFloat(rptLatEl.value) : null;
+                const rptLon = rptLonEl && rptLonEl.value ? parseFloat(rptLonEl.value) : null;
+                let candidate = null;
+                if (!isNaN(rptLat) && !isNaN(rptLon)) {
+                    let bestD = Infinity;
+                    centersData.forEach(cc => {
+                        if (cc.latitud && cc.longitud) {
+                            const dLat = rptLat - parseFloat(cc.latitud);
+                            const dLon = rptLon - parseFloat(cc.longitud);
+                            const d2 = dLat*dLat + dLon*dLon;
+                            if (d2 < bestD) { bestD = d2; candidate = cc; }
+                        }
+                    });
+                }
+                if (!candidate) {
+                    candidate = centersData.find(cc => cc.latitud && cc.longitud) || null;
+                }
+                if (candidate) {
+                    selectedInput.value = candidate.id;
+                    highlightLegend(candidate.id);
+                    highlightMarker(candidate.id);
+                    centersMap.setView([candidate.latitud, candidate.longitud], 15);
+                }
+            }
+        }*/
         function highlightLegend(id){
-            centersData.forEach(c => {
-                const el = document.getElementById(`legend_center_${c.id}`);
-                if (el) el.style.fontWeight = (String(c.id) === String(id)) ? '700' : '400';
+            const all = document.querySelectorAll('#centers_legend .center-legend-item');
+            all.forEach(el => el.classList.remove('active'));
+            const el = document.getElementById(`legend_center_${id}`);
+            if (el) el.classList.add('active');
+        }
+        function highlightMarker(id){
+            centersMarkers.forEach(obj => {
+                const iconEl = obj.marker?._icon;
+                if (!iconEl) return;
+                iconEl.classList.remove('selected');
             });
+            const selected = centersMarkers.find(obj => String(obj.id) === String(id));
+            if (selected && selected.marker && selected.marker._icon) {
+                selected.marker._icon.classList.add('selected');
+            }
         }
     }
 
@@ -197,3 +346,32 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 @endif
+
+<style>
+.custom-file-label::after { content: 'Subir'; }
+#centers_legend .center-legend-item {
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  margin-bottom: 6px;
+}
+#centers_legend .center-legend-item.active {
+  background-color: #e9f2ff;
+  border-color: #0d6efd;
+  color: #0d6efd;
+  font-weight: 700;
+}
+.leaflet-marker-icon.selected {
+  filter: hue-rotate(900deg) saturate(1.6) brightness(1.3);
+}
+.leaflet-tooltip.center-tooltip {
+  background: #ffffff;
+  color: #333;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 3px;
+  padding: 2px 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.1);
+  font-size: 12px;
+  font-weight: 600;
+}
+</style>
