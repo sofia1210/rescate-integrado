@@ -13,6 +13,9 @@ use Illuminate\View\View;
 use App\Models\Animal;
 use App\Services\Animal\AnimalTransferTransactionalService;
 use Illuminate\Http\JsonResponse;
+use App\Models\Report;
+use App\Models\Person;
+use Illuminate\Support\Facades\Auth;
 
 class TransferController extends Controller
 {
@@ -26,9 +29,44 @@ class TransferController extends Controller
      */
     public function index(Request $request): View
     {
-        $transfers = Transfer::with(['person','center'])->paginate();
+        // Soporte JSON para centro actual via resource index con query params
+        if ($request->boolean('current_center') && $request->filled('animal_id')) {
+            $animalId = (int) $request->input('animal_id');
+            $last = \App\Models\Transfer::where('animal_id', $animalId)->orderByDesc('id')->first();
+            $currentCenter = $last?->center;
+            $centers = Center::orderBy('nombre')->get(['id','nombre','latitud','longitud']);
+            $destinations = $centers->when($currentCenter, function ($c) use ($currentCenter) {
+                return $c->where('id', '!=', $currentCenter->id);
+            })->values();
+            return response()->json([
+                'current' => $currentCenter ? [
+                    'id' => $currentCenter->id,
+                    'nombre' => $currentCenter->nombre,
+                    'latitud' => $currentCenter->latitud,
+                    'longitud' => $currentCenter->longitud,
+                ] : null,
+                'destinations' => $destinations,
+            ]);
+        }
 
-        return view('transfer.index', compact('transfers'))
+        $transfers = Transfer::with(['person','center'])->paginate();
+        // Datos para UI de operaciones en la misma ruta
+        $firstReportIds = Transfer::where('primer_traslado', true)
+            ->whereNotNull('reporte_id')
+            ->pluck('reporte_id')
+            ->all();
+        $reportsFirst = Report::with(['person','condicionInicial'])
+            ->where('aprobado', true)
+            ->when(!empty($firstReportIds), fn($q) => $q->whereNotIn('id', $firstReportIds))
+            ->orderByDesc('id')
+            ->take(12)
+            ->get(['id','persona_id','condicion_inicial_id','aprobado','created_at']);
+        $centers = Center::orderBy('nombre')->get(['id','nombre','latitud','longitud']);
+        $people = Person::orderBy('nombre')->get(['id','nombre']);
+        $animals = Animal::orderByDesc('id')->get(['id','nombre']);
+        $transfer = new Transfer();
+
+        return view('transfer.index', compact('transfers','reportsFirst','centers','people','animals','transfer'))
             ->with('i', ($request->input('page', 1) - 1) * $transfers->perPage());
     }
 
@@ -50,8 +88,43 @@ class TransferController extends Controller
      */
     public function store(TransferRequest $request): RedirectResponse
     {
+        $data = $request->validated();
         try {
-            $this->transferService->create($request->validated());
+            // Modo "primer traslado" si viene report_id y NO viene animal_id
+            if (!empty($data['report_id']) && empty($data['animal_id'])) {
+                $report = Report::findOrFail($data['report_id']);
+                if ((int)$report->aprobado !== 1) {
+                    return Redirect::back()->with('error', 'El hallazgo no está aprobado.');
+                }
+                // Evitar duplicado de primer traslado
+                $exists = \App\Models\Transfer::where('primer_traslado', true)
+                    ->where('reporte_id', $report->id)
+                    ->exists();
+                if ($exists) {
+                    return Redirect::back()->with('error', 'Este hallazgo ya tiene un primer traslado.');
+                }
+                $personId = Person::where('usuario_id', Auth::id())->value('id');
+                $payload = [
+                    'persona_id' => $personId,
+                    'reporte_id' => $report->id,
+                    'centro_id' => $data['centro_id'],
+                    'observaciones' => $data['observaciones'] ?? $report->observaciones,
+                    'primer_traslado' => true,
+                    'animal_id' => null,
+                    'latitud' => $report->latitud,
+                    'longitud' => $report->longitud,
+                ];
+                $this->transferService->create($payload);
+                return Redirect::route('reports.index')
+                    ->with('success', 'Primer traslado registrado correctamente.');
+            }
+            // Modo traslado interno (entre centros) usando animal_id
+            $personId = $data['persona_id'] ?? Person::where('usuario_id', Auth::id())->value('id');
+            $payload = array_merge($data, [
+                'persona_id' => $personId,
+                'primer_traslado' => false,
+            ]);
+            $this->transferService->create($payload);
         } catch (\Throwable $e) {
             return Redirect::back()->withInput()->with('error', 'No se pudo registrar el traslado: '.$e->getMessage());
         }
@@ -83,19 +156,9 @@ class TransferController extends Controller
         return view('transfer.edit', compact('transfer','rescuers','centers','animals','people'));
     }
 
-    public function currentCenterByAnimal(Animal $animal): JsonResponse
-    {
-        $last = \App\Models\Transfer::where('animal_id', $animal->id)->orderByDesc('id')->first();
-        $currentCenter = $last?->center;
-        $centers = Center::orderBy('nombre')->get(['id','nombre','latitud','longitud']);
-        $destinations = $centers->when($currentCenter, function ($c) use ($currentCenter) {
-            return $c->where('id', '!=', $currentCenter->id);
-        })->values();
-        return response()->json([
-            'current' => $currentCenter ? ['id' => $currentCenter->id, 'nombre' => $currentCenter->nombre, 'latitud' => $currentCenter->latitud, 'longitud' => $currentCenter->longitud] : null,
-            'destinations' => $destinations,
-        ]);
-    }
+    // Método específico eliminado; el primer traslado se maneja en store() del resource
+
+    // Eliminado: currentCenterByAnimal. Usar index() con params.
     /**
      * Update the specified resource in storage.
      */

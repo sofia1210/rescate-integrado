@@ -116,7 +116,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const id = animalSel.value;
         centerInput.value = '';
         if (!id) { currentName.textContent = ''; currentWrap.style.display = 'none'; centersWrap.style.display = 'none'; return; }
-        fetch('{{ route('transfers.currentCenter', ['animal' => 'ID']) }}'.replace('ID', id))
+        const url = new URL('{{ route('transfers.index') }}', window.location.origin);
+        url.searchParams.set('current_center', '1');
+        url.searchParams.set('animal_id', id);
+        fetch(url.toString())
             .then(r => r.json())
             .then(data => {
                 renderCentersMap(data.destinations || [], data.current || null);

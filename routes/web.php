@@ -62,7 +62,7 @@ Route::resource('medical-evaluations', MedicalEvaluationController::class);
 Route::resource('treatment-types', TreatmentTypeController::class);
 Route::resource('rescuers', RescuerController::class);
 Route::resource('transfers', TransferController::class);
-Route::get('transfers/current-center/{animal}', [TransferController::class, 'currentCenterByAnimal'])->name('transfers.currentCenter');
+// Eliminado: usar transfers.index con query params (animal_id, current_center=1) para JSON
 Route::resource('care-feedings', CareFeedingController::class);
 Route::resource('feeding-types', FeedingTypeController::class);
 Route::resource('feeding-frequencies', FeedingFrequencyController::class);

@@ -29,7 +29,7 @@ class Transfer extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['persona_id', 'centro_id', 'observaciones', 'primer_traslado', 'animal_id', 'latitud', 'longitud'];
+    protected $fillable = ['persona_id', 'reporte_id', 'centro_id', 'observaciones', 'primer_traslado', 'animal_id', 'latitud', 'longitud'];
 
 
     /**
@@ -46,6 +46,14 @@ class Transfer extends Model
     public function person()
     {
         return $this->belongsTo(\App\Models\Person::class, 'persona_id', 'id');
+    }
+    
+    /**
+     * Hallazgo origen (si aplica para primer traslado)
+     */
+    public function report()
+    {
+        return $this->belongsTo(\App\Models\Report::class, 'reporte_id', 'id');
     }
     
 }

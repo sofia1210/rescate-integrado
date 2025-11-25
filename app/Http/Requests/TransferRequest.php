@@ -22,8 +22,12 @@ class TransferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'persona_id' => 'required|exists:people,id',
-            'animal_id' => 'required|exists:animals,id',
+            // Dos modos:
+            // - Primer traslado: report_id requerido, persona/animal no requeridos
+            // - Traslado interno: animal_id requerido, persona requerida (o la define el servidor)
+            'report_id' => 'nullable|exists:reports,id',
+            'persona_id' => 'required_without:report_id|nullable|exists:people,id',
+            'animal_id' => 'required_without:report_id|nullable|exists:animals,id',
             'centro_id' => 'required|exists:centers,id',
             'observaciones' => 'nullable|string',
         ];

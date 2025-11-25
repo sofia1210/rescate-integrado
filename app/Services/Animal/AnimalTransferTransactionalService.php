@@ -41,19 +41,19 @@ class AnimalTransferTransactionalService
 				}
 			} else {
 				// Primer traslado desde reporte de hallazgo (sin animal aún)
-				AnimalHistory::create([
+                AnimalHistory::create([
 					'animal_file_id' => null,
 					'valores_antiguos' => null,
 					'valores_nuevos' => [
 						'transfer' => [
 							'id' => $transfer->id,
 							'persona_id' => $transfer->persona_id,
+                            'reporte_id' => $transfer->reporte_id ?? ($data['reporte_id'] ?? null),
 							'centro_id' => $transfer->centro_id,
 							'observaciones' => $transfer->observaciones,
 							'primer_traslado' => true,
 							'latitud' => $transfer->latitud ?? null,
 							'longitud' => $transfer->longitud ?? null,
-							'report_id' => $data['reporte_id'] ?? null,
 						],
 					],
 					'observaciones' => [
