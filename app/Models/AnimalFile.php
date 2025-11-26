@@ -35,7 +35,7 @@ class AnimalFile extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['animal_id', 'tipo_id', 'especie_id', 'imagen_url', 'raza_id', 'estado_id'];
+    protected $fillable = ['animal_id', 'tipo_id', 'especie_id', 'imagen_url', 'raza_id', 'estado_id', 'centro_id'];
 
 
     /**
@@ -76,6 +76,14 @@ class AnimalFile extends Model
     public function breed()
     {
         return $this->belongsTo(\App\Models\Breed::class, 'raza_id', 'id');
+    }
+
+    /**
+     * Centro actual asociado a la hoja de vida (campo sin FK dura en DB).
+     */
+    public function center()
+    {
+        return $this->belongsTo(\App\Models\Center::class, 'centro_id', 'id');
     }
     
     /**

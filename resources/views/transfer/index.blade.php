@@ -139,7 +139,6 @@
                                             @csrf
                                             <input type="hidden" name="animal_file_id" id="internal_af_hidden">
                                             <input type="hidden" name="animal_id" id="internal_animal_hidden">
-                                            <input type="hidden" name="centro_id" id="centro_internal">
                                             <div class="card card-outline card-secondary mb-2">
                                                 <div class="card-body p-2 d-flex align-items-center">
                                                     <div style="width:84px; height:84px; border-radius:4px; overflow:hidden; background:#f4f6f9;" class="mr-2">
@@ -164,15 +163,14 @@
                                             </div>
                                             <div class="form-group mb-2 mb20">
                                                 <label for="centro_internal_select" class="form-label">{{ __('Centro de destino') }}</label>
-                                                <select id="centro_internal_select" class="form-control">
+                                                <select name="centro_id" id="centro_internal_select" class="form-control">
                                                     <option value="">{{ __('Seleccione') }}</option>
+                                                    @foreach(($centers ?? []) as $c)
+                                                        <option value="{{ $c->id }}">N°{{ $c->id }} {{ $c->nombre }}</option>
+                                                    @endforeach
                                                 </select>
-                                                <small class="form-text text-muted">{{ __('Muestra todos los centros excepto el actual del animal.') }}</small>
+                                                <small class="form-text text-muted">{{ __('Seleccione el centro de destino.') }}</small>
                                             </div>
-                                            
-                                            <label class="form-label">{{ __('(Opcional) Seleccione en el mapa') }}</label>
-                                            <div id="centers_map_internal" style="height: 320px; border-radius: 4px; margin-bottom: 8px;"></div>
-                                            <div id="centers_legend_internal" class="small text-muted"></div>
                                             <button type="submit" class="btn btn-primary mt-2">{{ __('Enviar a centro') }}</button>
                                         </form>
                                     </div>
@@ -366,12 +364,11 @@
             const currentCenterEl = document.getElementById('internal_current_center');
             const hiddenAf = document.getElementById('internal_af_hidden');
             const hiddenAnimal = document.getElementById('internal_animal_hidden');
-            const centerHidden = document.getElementById('centro_internal');
             const centerSelect = document.getElementById('centro_internal_select');
             const infoName = document.getElementById('internal_animal_info_name');
             const infoImg = document.getElementById('internal_animal_info_img');
 
-            function renderInternalMap(animalId) {
+            function loadCurrentCenter(animalId) {
                 const url = new URL('{{ route('transfers.index') }}', window.location.origin);
                 url.searchParams.set('current_center', '1');
                 url.searchParams.set('animal_id', animalId);
@@ -380,27 +377,14 @@
                     .then(data => {
                         const cur = data.current;
                         if (cur) {
-                            currentCenterEl.textContent = `#${cur.id} ${cur.nombre}`;
+                            currentCenterEl.textContent = `N°${cur.id} ${cur.nombre}`;
                         } else {
                             currentCenterEl.textContent = '-';
                         }
-                        // dropdown de destinos
-                        if (centerSelect) {
-                            centerSelect.innerHTML = '<option value=\"\">{{ __('Seleccione') }}</option>';
-                            (data.destinations || []).forEach(function(c){
-                                var opt = document.createElement('option');
-                                opt.value = c.id;
-                                opt.textContent = '#' + c.id + ' ' + c.nombre;
-                                centerSelect.appendChild(opt);
-                            });
-                            centerSelect.onchange = function(){ if (centerHidden) centerHidden.value = this.value || ''; };
-                        }
-                        window._internalMapInstance = buildMap('centers_map_internal', 'centers_legend_internal', 'centro_internal', (data.destinations || []));
                         panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     })
                     .catch(() => {
                         currentCenterEl.textContent = '-';
-                        window._internalMapInstance = buildMap('centers_map_internal', 'centers_legend_internal', 'centro_internal', []);
                     });
             }
 
@@ -427,13 +411,7 @@
                     document.querySelectorAll('.internal-af-card').forEach(c => { if (c !== this) c.style.display = 'none'; });
                     // Show right panel
                     panel.classList.remove('d-none');
-                    renderInternalMap(animalId);
-                    // fix leaflet sizing after reveal
-                    setTimeout(() => {
-                        if (window._internalMapInstance && window._internalMapInstance.invalidateSize) {
-                            try { window._internalMapInstance.invalidateSize(); } catch(e) {}
-                        }
-                    }, 50);
+                    loadCurrentCenter(animalId);
                 });
             });
 
@@ -441,7 +419,7 @@
                 e.preventDefault();
                 // Reset UI
                 panel.classList.add('d-none');
-                document.getElementById('centro_internal').value = '';
+                if (centerSelect) centerSelect.value = '';
                 currentCenterEl.textContent = '-';
                 document.querySelectorAll('.internal-af-card').forEach(c => c.style.display = '');
             });

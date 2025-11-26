@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Transfer;
 
 /**
  * Class Report
@@ -95,5 +96,22 @@ class Report extends Model
     public function incidentType()
     {
         return $this->belongsTo(\App\Models\IncidentType::class, 'tipo_incidente_id', 'id');
+    }
+
+    /**
+     * Traslados asociados a este hallazgo (vía campo reporte_id en transfers).
+     */
+    public function transfers()
+    {
+        return $this->hasMany(Transfer::class, 'reporte_id', 'id');
+    }
+
+    /**
+     * Primer traslado registrado para este hallazgo (si existe).
+     */
+    public function firstTransfer()
+    {
+        return $this->hasOne(Transfer::class, 'reporte_id', 'id')
+            ->where('primer_traslado', true);
     }
 }

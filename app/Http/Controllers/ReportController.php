@@ -30,7 +30,7 @@ class ReportController extends Controller
      */
     public function index(Request $request): View
     {
-        $query = Report::with(['person', 'condicionInicial', 'incidentType'])
+        $query = Report::with(['person', 'condicionInicial', 'incidentType', 'firstTransfer.center'])
             ->orderByDesc('id');
 
         // Filters
@@ -171,7 +171,7 @@ class ReportController extends Controller
      */
     public function show($id): View
     {
-        $report = Report::find($id);
+        $report = Report::with(['firstTransfer.center'])->findOrFail($id);
 
         return view('report.show', compact('report'));
     }

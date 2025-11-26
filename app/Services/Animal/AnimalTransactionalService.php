@@ -6,6 +6,7 @@ use App\Models\Animal;
 use App\Models\AnimalFile;
 use App\Models\AnimalHistory;
 use App\Models\Report;
+use App\Models\Transfer;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -47,8 +48,19 @@ class AnimalTransactionalService
 				}
 			}
 
-			$animalFileData['animal_id'] = $animal->id;
-			$animalFile = AnimalFile::create($animalFileData);
+            $animalFileData['animal_id'] = $animal->id;
+
+            // Si viene de un reporte con primer traslado, usar ese centro como centro actual
+            if (!empty($animalData['reporte_id']) && empty($animalFileData['centro_id'])) {
+                $firstCenterId = Transfer::where('reporte_id', $animalData['reporte_id'])
+                    ->where('primer_traslado', true)
+                    ->value('centro_id');
+                if ($firstCenterId) {
+                    $animalFileData['centro_id'] = $firstCenterId;
+                }
+            }
+
+            $animalFile = AnimalFile::create($animalFileData);
 
 			// Registrar creación de Hoja de Vida en historial
 			AnimalHistory::create([
@@ -155,7 +167,17 @@ class AnimalTransactionalService
 					}
 				}
 
-				$afData['animal_id'] = $animal->id;
+                $afData['animal_id'] = $animal->id;
+
+                // Si viene de un reporte con primer traslado, usar ese centro como centro actual
+                if (!empty($animalData['reporte_id']) && empty($afData['centro_id'])) {
+                    $firstCenterId = Transfer::where('reporte_id', $animalData['reporte_id'])
+                        ->where('primer_traslado', true)
+                        ->value('centro_id');
+                    if ($firstCenterId) {
+                        $afData['centro_id'] = $firstCenterId;
+                    }
+                }
 				$animalFile = AnimalFile::create($afData);
 
 				// Historial (arrived_count = 1)

@@ -23,7 +23,10 @@ class AnimalFeedingTransactionalController extends Controller
 
 	public function create(): View
 	{
-		$animalFiles = AnimalFile::with('animal')->orderByDesc('id')->get(['id','animal_id']);
+		$animalFiles = AnimalFile::with('animal')
+			->whereDoesntHave('release')
+			->orderByDesc('id')
+			->get(['id','animal_id']);
 		$feedingTypeOptions = FeedingType::orderBy('nombre')->pluck('nombre', 'id');
 		$feedingFrequencyOptions = FeedingFrequency::orderBy('nombre')->pluck('nombre', 'id');
 		$feedingPortionOptions = FeedingPortion::orderBy('cantidad')->get()->mapWithKeys(function ($portion) {

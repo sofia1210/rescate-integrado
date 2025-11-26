@@ -23,7 +23,7 @@
                                         <select name="animal_file_id" id="animal_file_id" class="form-control @error('animal_file_id') is-invalid @enderror">
                                             <option value="">{{ __('Seleccione') }}</option>
                                             @foreach(($animalFiles ?? []) as $af)
-                                                <option value="{{ $af->id }}" {{ (string)old('animal_file_id') === (string)$af->id ? 'selected' : '' }}>#{{ $af->id }} {{ $af->animal?->nombre ? '- ' . $af->animal->nombre : '' }}</option>
+                                                <option value="{{ $af->id }}" {{ (string)old('animal_file_id') === (string)$af->id ? 'selected' : '' }}>N°{{ $af->id }} {{ $af->animal?->nombre ? '- ' . $af->animal->nombre : '' }}</option>
                                             @endforeach
                                         </select>
                                         {!! $errors->first('animal_file_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}

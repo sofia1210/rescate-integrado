@@ -62,7 +62,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <label class="mb-1">{{ __('Aprobado') }}</label>
                                     <select name="aprobado" class="form-control">
                                         <option value="">{{ __('Todos') }}</option>
@@ -85,7 +85,7 @@
                             background: #f4f6f9;
                         }
                         .report-card .card-header { padding-left: 1.25rem; padding-right: 1.25rem; }
-                        .report-card .card-header .card-tools { margin-right: 0; }
+                        .report-card .card-header .card-tools { margin-left: auto; margin-right: .25rem; }
                         /* Ajuste de espacios verticales entre cuerpo y footer */
                         .report-card .card-body { padding-bottom: .75rem; }
                         .report-card .card-footer { padding-top: .5rem; padding-bottom: .5rem; }
@@ -128,6 +128,12 @@
                                             <p class="mb-1"><strong>{{ __('Incidente:') }}</strong> {{ $report->incidentType?->nombre ?? '-' }}</p>
                                             <!-- Se oculta Reportante según requerimiento -->
                                             <p class="mb-1"><strong>{{ __('Aprobado:') }}</strong> {{ (int)$report->aprobado === 1 ? __('Sí') : __('No') }}</p>
+                                            @if($report->firstTransfer?->center)
+                                                <p class="mb-1">
+                                                    <strong>{{ __('Traslado a:') }}</strong>
+                                                    {{ 'N°' . $report->firstTransfer->center->id . ' ' . $report->firstTransfer->center->nombre }}
+                                                </p>
+                                            @endif
                                             <!--<p class="mb-1"><strong>{{ __('Tamaño:') }}</strong> {{ $report->tamano ?? '-' }}</p>
                                             <p class="mb-1"><strong>{{ __('¿Puede moverse?:') }}</strong> {{ is_null($report->puede_moverse) ? '-' : ($report->puede_moverse ? __('Sí') : __('No')) }}</p>-->
                                             <p class="mb-0"><strong>{{ __('Fecha:') }}</strong> {{ optional($report->created_at)->format('d/m/Y') }}</p>
