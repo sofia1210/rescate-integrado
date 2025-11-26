@@ -71,7 +71,8 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mt-2">
+                            <div class="mt-2 d-flex align-items-center">
+                                <button type="submit" class="btn btn-primary btn-sm mr-3">{{ __('Aplicar filtros') }}</button>
                                 <a href="{{ route('reports.index') }}" class="btn btn-link p-0">{{ __('Mostrar todos') }}</a>
                             </div>
                         </form>
@@ -91,9 +92,10 @@
                         /* Botones iguales y con separación uniforme */
                         .report-card .card-footer form > * { flex: 1 1 0; }
                         .report-card .card-footer form > * + * { margin-left: .5rem; }
+                        .report-grid > [class*='col-'] { margin-bottom: 30px; }
                         </style>
 
-                        <div class="row">
+                        <div class="row mt-3 report-grid">
                             @foreach ($reports as $report)
                                 @php
                                     $urg = $report->urgencia;
@@ -160,12 +162,8 @@
     document.addEventListener('DOMContentLoaded', function(){
         var form = document.querySelector('form.js-auto-filter-form');
         if (form) {
-            var selects = form.querySelectorAll('select');
-            selects.forEach(function(sel){
-                sel.addEventListener('change', function(){
-                    form.submit();
-                });
-            });
+            var applyBtn = form.querySelector('button[type="submit"]');
+            applyBtn && applyBtn.addEventListener('click', function(){ /* submit explicit */ });
         }
         if (window.$ && typeof window.$.fn.tooltip === 'function') {
             window.$('[data-toggle="tooltip"]').tooltip();

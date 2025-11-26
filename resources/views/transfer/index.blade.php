@@ -103,13 +103,14 @@
                                         </div>
                                     @endforelse
                                     </div>
-                                    <div class="col-md-6 d-none" id="first_map_panel">
+                                    <div class="col-md-6 d-none text-center" id="first_map_panel">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <button type="button" class="btn btn-link p-0" id="first_back_btn">{{ __('Volver a hallazgos aprobados') }}</button>
+                                            <button type="button" class="btn btn-secondary btn-sm" id="first_back_btn"><i class="fa fa-arrow-left"></i> {{ __('Volver a hallazgos aprobados') }}</button>
                                         </div>
-                                        <label class="form-label">{{ __('Seleccione el centro de destino en el mapa') }}</label>
+                                        <label class="form-label d-block mb-1">{{ __('Seleccione el centro de destino en el mapa') }}</label>
+                                        <small class="text-muted d-block mb-2">{{ __('Haga clic en un centro o en su nombre en la lista para seleccionarlo') }}</small>
                                         <div id="centers_map_first" style="height: 360px; border-radius: 4px; margin-bottom: 8px;"></div>
-                                        <div id="centers_legend_first" class="small text-muted"></div>
+                                        <div id="centers_legend_first" class="small text-muted"></div
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +135,7 @@
                                     </div>
                                     <div class="col-md-6 d-none" id="internal_map_panel">
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <button type="button" class="btn btn-link p-0" id="internal_back_btn">{{ __('Volver a hojas de vida') }}</button>
+                                            <button type="button" class="btn btn-secondary btn-sm" id="internal_back_btn"><i class="fa fa-arrow-left"></i> {{ __('Volver a hojas de vida') }}</button>
                                         </div>
                                         <form method="POST" action="{{ route('transfers.store') }}">
                                             @csrf
