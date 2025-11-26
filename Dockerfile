@@ -49,5 +49,9 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Exponer puerto que Render usa
 EXPOSE 10000
 
+RUN php artisan config:clear && \
+    php artisan cache:clear && \
+    php artisan migrate --force || true
+
 # Apache escucha normalmente en el 80, pero Render redirige 10000 -> 80 automáticamente
 CMD ["apache2-foreground"]
