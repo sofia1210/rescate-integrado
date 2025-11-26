@@ -80,7 +80,7 @@ class AnimalMedicalEvaluationTransactionalService
 					],
 				],
 				'observaciones' => [
-					'texto' => $data['observaciones'] ?? 'Evaluación médica y actualización de estado',
+					'texto' => $data['observaciones'] ?? 'Evaluación médica',
 				],
 			];
 			if ($oldStatus && $newStatusModel) {

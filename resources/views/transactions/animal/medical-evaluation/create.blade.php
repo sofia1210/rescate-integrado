@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('template_title')
-    {{ __('Registrar Evaluación Médica (Transaccional)') }}
+    {{ __('Registrar Evaluación Médica') }}
 @endsection
 
 @section('content')
@@ -95,7 +95,7 @@
                                                     <option value="">{{ __('Seleccione') }}</option>
                                                     @foreach(($veterinarians ?? []) as $v)
                                                         <option value="{{ $v->id }}" data-especialidad="{{ $v->especialidad }}" {{ (string)old('veterinario_id') === (string)$v->id ? 'selected' : '' }}>
-                                                            #{{ $v->id }} {{ $v->person?->nombre ?? '' }}@if($v->especialidad) ({{ $v->especialidad }}) @endif
+                                                            {{ $v->person?->nombre ?? '' }}@if($v->especialidad) ({{ $v->especialidad }}) @endif
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -298,9 +298,12 @@
                                               body.className = 'card-body';
                                               body.style.display = 'none';
                                               body.innerHTML = `
-                                                ${e.diagnostico ? ('<div><strong>Dx:</strong> ' + e.diagnostico + '</div>') : ''}
-                                                ${e.descripcion ? ('<div><strong>Desc:</strong> ' + e.descripcion + '</div>') : ''}
-                                                ${e.tratamiento_texto ? ('<div><strong>Tratamiento:</strong> ' + e.tratamiento_texto + '</div>') : ''}
+                                                ${e.diagnostico ? ('<div><strong>Diagnóstico:</strong> ' + e.diagnostico + '</div>') : ''}
+                                                ${e.descripcion ? ('<div><strong>Descripción:</strong> ' + e.descripcion + '</div>') : ''}
+                                                ${e.tratamiento_nombre ? ('<div><strong>Tipo de tratamiento:</strong> ' + e.tratamiento_nombre + '</div>') : ''}
+                                                ${e.tratamiento_texto ? ('<div><strong>Detalles:</strong> ' + e.tratamiento_texto + '</div>') : ''}
+                                                ${e.peso ? ('<div><strong>Peso:</strong> ' + e.peso + ' kg</div>') : ''}
+                                                ${e.temperatura ? ('<div><strong>Temperatura:</strong> ' + e.temperatura + ' °C</div>') : ''}
                                               `;
                                               hdr.addEventListener('click', () => {
                                                 body.style.display = body.style.display === 'none' ? '' : 'none';

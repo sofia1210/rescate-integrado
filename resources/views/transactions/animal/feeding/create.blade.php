@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('template_title')
-    {{ __('Registrar Alimentación (Transaccional)') }}
+    {{ __('Registrar Alimentación') }}
 @endsection
 
 @section('content')

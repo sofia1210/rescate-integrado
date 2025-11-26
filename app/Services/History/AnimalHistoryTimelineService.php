@@ -148,13 +148,24 @@ class AnimalHistoryTimelineService
 
 			// Cambio de estado
 			if (!empty($new['estado'])) {
-				$item['title'] = 'Cambio de estado';
 				$oldName = isset($old['estado']['id']) ? ($statuses[$old['estado']['id']]->nombre) : ($old['estado']['nombre'] ?? null);
 				$newName = isset($new['estado']['id']) ? ($statuses[$new['estado']['id']]->nombre) : ($new['estado']['nombre'] ?? null);
-				$item['details'][] = [
-					'label' => 'Detalle',
-					'value' => trim(($oldName ? $oldName.' → ' : '') . ($newName ?? '')),
-				];
+
+				// Si hay cambio real, mostrar "Anterior → Actual".
+				if ($oldName && $newName && $oldName !== $newName) {
+					$item['title'] = 'Cambio de estado';
+					$item['details'][] = [
+						'label' => 'Detalle',
+						'value' => $oldName.' → '.$newName,
+					];
+				} else {
+					// Si no hay cambio (o no se conoce el anterior), solo mostrar el estado actual.
+					$item['title'] = 'Estado';
+					$item['details'][] = [
+						'label' => 'Estado actual',
+						'value' => $newName ?? $oldName ?? '',
+					];
+				}
 			}
 
 			// Evaluación médica

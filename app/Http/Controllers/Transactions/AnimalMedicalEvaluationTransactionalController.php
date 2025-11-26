@@ -35,12 +35,29 @@ class AnimalMedicalEvaluationTransactionalController extends Controller
 		// Pre-evaluación: últimas 3 evaluaciones y último historial (no médico)
 		$lastDataByAnimalFile = [];
 		foreach ($animalFiles as $af) {
-			$lastEvals = \App\Models\MedicalEvaluation::where('animal_file_id', $af->id)
+			$lastEvals = \App\Models\MedicalEvaluation::with('treatmentType')
+				->where('animal_file_id', $af->id)
 				->orderByDesc('fecha')->orderByDesc('id')->limit(3)
-				->get(['id','fecha','descripcion','diagnostico','tratamiento_id','tratamiento_texto','imagen_url']);
+				->get(['id','fecha','descripcion','diagnostico','tratamiento_id','tratamiento_texto','peso','temperatura','imagen_url'])
+				->map(function ($e) {
+					return [
+						'id' => $e->id,
+						'fecha' => optional($e->fecha)->toDateString(),
+						'descripcion' => $e->descripcion,
+						'diagnostico' => $e->diagnostico,
+						'tratamiento_id' => $e->tratamiento_id,
+						'tratamiento_nombre' => $e->treatmentType?->nombre,
+						'tratamiento_texto' => $e->tratamiento_texto,
+						'peso' => $e->peso,
+						'temperatura' => $e->temperatura,
+						'imagen_url' => $e->imagen_url,
+					];
+				});
+
 			$lastNonMedHistory = \App\Models\AnimalHistory::where('animal_file_id', $af->id)
 				->where(function($q){ $q->whereNull('valores_nuevos->evaluacion_medica'); })
 				->orderByDesc('changed_at')->orderByDesc('id')->first(['id','changed_at','valores_nuevos','observaciones']);
+
 			$lastDataByAnimalFile[$af->id] = [
 				'lastEvaluations' => $lastEvals,
 				'lastHistory' => $lastNonMedHistory,
@@ -88,7 +105,7 @@ class AnimalMedicalEvaluationTransactionalController extends Controller
 		$this->service->registerEvaluation($data, $image);
 
 		return Redirect::route('animal-histories.index')
-			->with('success', 'Evaluación médica registrada y estado actualizado (transaccional).');
+			->with('success', 'Evaluación médica registrada.');
 	}
 }
 

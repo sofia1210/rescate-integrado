@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('template_title')
-    {{ __('Registrar Cuidado (Transaccional)') }}
+    {{ __('Registrar Cuidado') }}
 @endsection
 
 @section('content')
@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="card card-default">
                     <div class="card-header">
-                        <span class="card-title">{{ __('Registrar Cuidado + Historial') }}</span>
+                        <span class="card-title">{{ __('Registrar Cuidado') }}</span>
                     </div>
                     <form method="POST" action="{{ route('animal-care-records.store') }}" role="form" enctype="multipart/form-data">
                         @csrf
@@ -25,17 +25,21 @@
                                                 <option value="{{ $af->id }}"
                                                     data-rep-img="{{ $af->animal?->report?->imagen_url }}"
                                                     data-rep-obs="{{ $af->animal?->report?->observaciones }}"
-                                                    {{ (string)old('animal_file_id') === (string)$af->id ? 'selected' : '' }}>#{{ $af->id }} {{ $af->animal?->nombre ? '- ' . $af->animal->nombre : '' }}</option>
+                                                    data-last-info="{{ $af->last_summary }}"
+                                                    {{ (string)old('animal_file_id') === (string)$af->id ? 'selected' : '' }}>
+                                                    {{ $af->animal?->nombre ? '' . $af->animal->nombre : '' }}
+                                                </option>
                                             @endforeach
                                         </select>
                                         {!! $errors->first('animal_file_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                                     </div>
+
                                     <div class="form-group mb-2 mb20">
-                                        <label class="form-label">{{ __('Estado anterior (reporte)') }}</label>
+                                        <label class="form-label">{{ __('Última actualización') }}</label>
                                         <div id="care_prev_report_text">-</div>
                                     </div>
                                     <div class="form-group mb-2 mb20">
-                                        <label class="form-label">{{ __('Imagen de llegada (reporte)') }}</label>
+                                        <label class="form-label">{{ __('Imagen de llegada (hallazgo)') }}</label>
                                         <div class="mt-2">
                                             <a id="care_arrival_img_link" href="#" target="_blank" rel="noopener" style="display:none;">
                                                 <img id="care_arrival_img" src="" alt="Imagen de llegada" style="max-height:120px;">
@@ -54,13 +58,13 @@
                                         </select>
                                         {!! $errors->first('tipo_cuidado_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                                     </div>
-                                </div>
 
-                                <!-- Fecha: se asigna automáticamente por el sistema -->
-                                <div class="col-md-6">
                                     <div class="form-group mb-2 mb20">
                                         <label for="imagen" class="form-label">{{ __('Evidencia (imagen)') }}</label>
-                                        <input type="file" accept="image/*" name="imagen" class="form-control @error('imagen') is-invalid @enderror" id="imagen">
+                                        <div class="custom-file">
+                                            <input type="file" accept="image/*" name="imagen" class="custom-file-input @error('imagen') is-invalid @enderror" id="imagen">
+                                            <label class="custom-file-label" for="imagen" data-browse="Subir">Subir la imagen del animal</label>
+                                        </div>
                                         {!! $errors->first('imagen', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
                                         <div class="mt-2">
                                             <img id="care_preview_imagen" src="" alt="Evidencia seleccionada" style="max-height:120px; display:none;">
@@ -71,7 +75,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group mb-2 mb20">
                                         <label for="descripcion" class="form-label">{{ __('Descripción') }}</label>
-                                        <input type="text" name="descripcion" id="descripcion" class="form-control @error('descripcion') is-invalid @enderror" value="{{ old('descripcion') }}">
+                                        <textarea name="descripcion" id="descripcion" rows="3" class="form-control @error('descripcion') is-invalid @enderror">{{ old('descripcion') }}</textarea>
                                         {!! $errors->first('descripcion', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                                     </div>
                                 </div>
@@ -112,9 +116,10 @@
       function updateArrival(){
         const opt = afSel?.selectedOptions?.[0];
         if (!opt) return;
+        const lastInfo = opt.getAttribute('data-last-info') || '';
         const repObs = opt.getAttribute('data-rep-obs') || '';
         const repImg = opt.getAttribute('data-rep-img') || '';
-        if (prevText) prevText.textContent = repObs || '-';
+        if (prevText) prevText.textContent = lastInfo || repObs || '-';
         if (repImg) {
           const url = '{{ asset('storage') }}/' + repImg;
           imgLink.style.display = '';
@@ -129,6 +134,7 @@
       updateArrival();
     });
     </script>
+    @include('partials.custom-file')
 @endsection
 
 
