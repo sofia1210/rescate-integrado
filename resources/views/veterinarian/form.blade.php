@@ -57,3 +57,5 @@
         <button type="submit" class="btn btn-primary">{{ __('Submit') }}</button>
     </div>
 </div>
+
+@include('partials.custom-file')
