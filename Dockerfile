@@ -1,35 +1,53 @@
-# Dependencies build stage (Composer)
-FROM composer:2 AS vendor
-WORKDIR /app
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --prefer-dist --no-interaction --no-progress
-COPY . .
-RUN composer dump-autoload --optimize
-
-# Runtime stage (PHP 8.2 + Apache)
 FROM php:8.2-apache
 
-# Enable Apache rewrite for Laravel routes
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    libpq-dev \
+    postgresql-client
+
+# Limpiar cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instalar extensiones de PHP necesarias
+RUN docker-php-ext-install \
+    pdo_pgsql \
+    pgsql \
+    mbstring \
+    exif \
+    pcntl \
+    bcmath \
+    gd
+
+# Instalar Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Habilitar mod_rewrite de Apache
 RUN a2enmod rewrite
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf && \
-    sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 
-# Install Postgres PDO extension (the app uses pgsql)
-RUN apt-get update && apt-get install -y libpq-dev && \
-    docker-php-ext-configure pgsql -with-pgsql=/usr/include/postgresql && \
-    docker-php-ext-install pdo pdo_pgsql && \
-    rm -rf /var/lib/apt/lists/*
+# Configurar el DocumentRoot de Apache
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
+# Copiar código del proyecto
 WORKDIR /var/www/html
-COPY --chown=www-data:www-data --from=vendor /app /var/www/html
+COPY . .
 
-# Ensure Laravel can write cache/logs
-RUN chown -R www-data:www-data storage bootstrap/cache
+# Instalar dependencias de Laravel
+RUN composer install --no-dev --optimize-autoloader
 
-# Expose HTTP port
-EXPOSE 80
+# Permisos para storage y cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Healthcheck (basic)
-HEALTHCHECK --interval=30s --timeout=5s --start-period=30s \
-  CMD curl -f http://localhost/ || exit 1
+# Exponer puerto que Render usa
+EXPOSE 10000
+
+# Apache escucha normalmente en el 80, pero Render redirige 10000 -> 80 automáticamente
+CMD ["apache2-foreground"]
