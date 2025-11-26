@@ -26,6 +26,8 @@ use App\Http\Controllers\CareFeedingController;
 use App\Http\Controllers\FeedingTypeController;
 use App\Http\Controllers\FeedingFrequencyController;
 use App\Http\Controllers\FeedingPortionController;
+use App\Http\Controllers\IncidentTypeController;
+use App\Http\Controllers\AnimalConditionController;
 use App\Http\Controllers\Transactions\AnimalTransactionalController;
 use App\Http\Controllers\Transactions\AnimalFeedingTransactionalController;
 use App\Http\Controllers\Transactions\AnimalMedicalEvaluationTransactionalController;
@@ -62,11 +64,12 @@ Route::resource('medical-evaluations', MedicalEvaluationController::class);
 Route::resource('treatment-types', TreatmentTypeController::class);
 Route::resource('rescuers', RescuerController::class);
 Route::resource('transfers', TransferController::class);
-// Eliminado: usar transfers.index con query params (animal_id, current_center=1) para JSON
 Route::resource('care-feedings', CareFeedingController::class);
 Route::resource('feeding-types', FeedingTypeController::class);
 Route::resource('feeding-frequencies', FeedingFrequencyController::class);
 Route::resource('feeding-portions', FeedingPortionController::class);
+Route::resource('incident-types', IncidentTypeController::class)->middleware('auth');
+Route::resource('animal-conditions', AnimalConditionController::class)->middleware('auth');
 
 //Transaccionales
 Route::resource('animal-records', AnimalTransactionalController::class)->middleware('auth');

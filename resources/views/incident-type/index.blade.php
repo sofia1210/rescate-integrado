@@ -1,7 +1,7 @@
 @extends('adminlte::page')
 
 @section('template_title')
-    {{ __('Animal Files') }}
+    {{ __('Incident Types') }}
 @endsection
 
 @section('content')
@@ -13,11 +13,11 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Animal Files') }}
+                                {{ __('Incident Types') }}
                             </span>
 
                              <div class="float-right">
-                                <a href="{{ route('animal-records.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                <a href="{{ route('incident-types.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
                                   {{ __('Create New') }}
                                 </a>
                               </div>
@@ -36,42 +36,33 @@
                                     <tr>
                                         <th>No</th>
                                         
-                                    <th >Nombre del animal</th>
-                                    <th >Sexo</th>
-                                    <th >Tipo</th>
-                                    
-                                    <th >Especie</th>
-                                    <th >Imagen</th>
-                                    <th >Estado</th>
+									<th >{{ __('Nombre') }}</th>
+									<th >{{ __('Riesgo') }}</th>
+									<th >{{ __('Activo') }}</th>
 
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($animalFiles as $animalFile)
+                                    @foreach ($incidentTypes as $incidentType)
+                                        @php
+                                            $riskMap = ['Bajo','Medio','Alto'];
+                                        @endphp
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                             
-                                            <td >{{ $animalFile->animal?->nombre }}</td>
-                                            <td >{{ $animalFile->animal?->sexo }}</td>
-                                            <td >{{ $animalFile->animalType?->nombre }}</td>
-                                            <td >{{ $animalFile->species?->nombre }}</td>
-                                            <td >
-                                                @if($animalFile->imagen_url)
-                                                    <img src="{{ asset('storage/' . $animalFile->imagen_url) }}" alt="img" style="height:50px; width:auto;"/>
-                                                @endif
-                                            </td>
-                                            
-                                            <td >{{ $animalFile->animalStatus?->nombre }}</td>
+										<td >{{ $incidentType->nombre }}</td>
+										<td >{{ $riskMap[(int)($incidentType->riesgo ?? 0)] ?? '-' }}</td>
+										<td >{{ (int)$incidentType->activo === 1 ? 'Sí' : 'No' }}</td>
 
                                             <td>
-                                                <form action="{{ route('animal-files.destroy', $animalFile->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('animal-files.show', $animalFile->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('animal-files.edit', $animalFile->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                <form action="{{ route('incident-types.destroy', $incidentType->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('incident-types.show', $incidentType->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('incident-types.edit', $incidentType->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="button" class="btn btn-danger btn-sm js-confirm-delete"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
-                                                </form
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -80,9 +71,11 @@
                         </div>
                     </div>
                 </div>
-                {!! $animalFiles->withQueryString()->links() !!}
+                {!! $incidentTypes->withQueryString()->links() !!}
             </div>
         </div>
     </div>
     @include('partials.page-pad')
 @endsection
+
+

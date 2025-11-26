@@ -22,7 +22,7 @@
                         
                                 <div class="form-group mb-2 mb20">
                                     <strong>Animal:</strong>
-                                    {{ $care->animalFile?->nombre ?? '-' }}
+                                    {{ $care->animalFile?->animal?->nombre ?? '-' }}
                                 </div>
                                 <div class="form-group mb-2 mb20">
                                     <strong>Tipo de Cuidado:</strong>

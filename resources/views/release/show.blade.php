@@ -28,14 +28,7 @@
                                     <strong>Detalle:</strong>
                                     {{ $release->detalle }}
                                 </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>Latitud:</strong>
-                                    {{ $release->latitud }}
-                                </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>Longitud:</strong>
-                                    {{ $release->longitud }}
-                                </div>
+                                <!-- Ocultamos Latitud/Longitud en detalle -->
                                 @if(!is_null($release->latitud) && !is_null($release->longitud))
                                 <div class="form-group mb-2 mb20">
                                     <strong>Ubicación:</strong>

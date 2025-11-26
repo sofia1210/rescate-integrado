@@ -32,10 +32,7 @@
                                     <strong>Tipo:</strong>
                                     {{ $animalFile->animalType?->nombre ?? '-' }}
                                 </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>Reporte:</strong>
-                                    {{ optional($animalFile->animal?->report)->id ? '#' . $animalFile->animal->report->id : '-' }}
-                                </div>
+                                
                                 <div class="form-group mb-2 mb20">
                                     <strong>Especie:</strong>
                                     {{ $animalFile->species?->nombre ?? '-' }}
@@ -48,10 +45,7 @@
                                         <span>-</span>
                                     @endif
                                 </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>Raza:</strong>
-                                    {{ $animalFile->breed?->nombre ?? '-' }}
-                                </div>
+                                
                                 <div class="form-group mb-2 mb20">
                                     <strong>Estado:</strong>
                                     {{ $animalFile->animalStatus?->nombre ?? '-' }}

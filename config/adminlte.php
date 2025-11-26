@@ -364,6 +364,16 @@ return [
             'icon' => 'fas fa-fw fa-paw',
         ],*/
         [
+            'text' => 'Tipos de Incidentes',
+            'url' => 'incident-types',
+            'icon' => 'fas fa-fw fa-paw',
+        ],
+        [
+            'text' => 'Condiciones de Animales',
+            'url' => 'animal-conditions',
+            'icon' => 'fas fa-fw fa-paw',
+        ],
+        [
             'text' => 'Especies',
             'url' => 'species',
             'icon' => 'fas fa-fw fa-paw',

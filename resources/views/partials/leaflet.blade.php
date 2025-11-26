@@ -20,6 +20,7 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
 
     const initLat = latInput && latInput.value ? parseFloat(latInput.value) : null;
     const initLon = lonInput && lonInput.value ? parseFloat(lonInput.value) : null;
+    const hasInitCoords = (initLat !== null && !Number.isNaN(initLat)) && (initLon !== null && !Number.isNaN(initLon));
     const map = L.map(mapId).setView([
         initLat ?? start.lat,
         initLon ?? start.lon,
@@ -59,14 +60,14 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
     // --- TRACKING EN TIEMPO REAL ---
     let watchId = null;
 
-    // Reinicia el watch cuando vuelves a la pestaña
+    // Reinicia el watch cuando vuelves a la pestaña (solo si no hay coordenadas iniciales)
     document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") {
             // Evita saltos visuales
             setTimeout(() => map.invalidateSize(), 150);
 
             // Reiniciar watch
-            if (!userLocked && navigator.geolocation) {
+            if (!hasInitCoords && !userLocked && navigator.geolocation) {
                 if (watchId !== null) navigator.geolocation.clearWatch(watchId);
                 watchId = navigator.geolocation.watchPosition(
                     (pos) => {
@@ -91,7 +92,8 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
         }
     });
 
-    if (navigator.geolocation) {
+    // Iniciar seguimiento solo si no hay coordenadas iniciales
+    if (!hasInitCoords && navigator.geolocation) {
         watchId = navigator.geolocation.watchPosition(
             (pos) => {
                 if (userLocked) return;
@@ -109,7 +111,7 @@ window.initMapWithGeolocation = function initMapWithGeolocation(opts) {
         );
     }
 
-    if (!initLat || !initLon) {
+    if (!hasInitCoords) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (pos) => {

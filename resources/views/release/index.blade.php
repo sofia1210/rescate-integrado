@@ -38,8 +38,6 @@
                                         
 									<th >Direccion</th>
 									<th >Detalle</th>
-									<th >Latitud</th>
-									<th >Longitud</th>
 									<th >Aprobada</th>
 
                                         <th></th>
@@ -52,8 +50,6 @@
                                             
 										<td >{{ $release->direccion }}</td>
 										<td >{{ $release->detalle }}</td>
-										<td >{{ $release->latitud }}</td>
-										<td >{{ $release->longitud }}</td>
 									<td >{{ (int)$release->aprobada === 1 ? 'Sí' : 'No' }}</td>
 
                                             <td>
