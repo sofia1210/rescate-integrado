@@ -24,7 +24,6 @@ class ReportRequest extends FormRequest
         $isUpdate = in_array($this->method(), ['PUT', 'PATCH']);
         $rules = [
             // persona_id and aprobado are set server-side (aprobado solo en update)
-            'cantidad_animales' => 'nullable|integer|min:1',
             'imagen' => ($isUpdate ? 'nullable' : 'required') . '|image|mimes:jpg,jpeg,png,webp|max:4096',
             'observaciones' => 'nullable|string',
             // ubicación solo se exige en creación

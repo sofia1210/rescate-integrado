@@ -43,10 +43,6 @@ class ReportApiController extends Controller
         $data['persona_id'] = $personId;
         $data['aprobado'] = 0;
 
-        // cantidad de animales por defecto
-        if (empty($data['cantidad_animales'])) {
-            $data['cantidad_animales'] = 1;
-        }
 
         // imagen
         if ($request->hasFile('imagen')) {
@@ -76,7 +72,6 @@ class ReportApiController extends Controller
                 'tamano' => $report->tamano,
                 'puede_moverse' => $report->puede_moverse,
                 'urgencia' => $report->urgencia,
-                'cantidad_animales' => $report->cantidad_animales,
                 'imagen_url' => $report->imagen_url,
             ],
         ];

@@ -41,7 +41,7 @@ class AnimalTransactionalController extends Controller
         }
 
 		// Datos requeridos por el form de Animal (select oculto y tarjetas)
-		// Solo mostrar hallazgos aprobados que YA tengan primer traslado registrado.
+		// Mostrar hallazgos aprobados que YA tengan primer traslado registrado.
 		$reports = Report::query()
 			->where('aprobado', 1)
             ->whereIn('reports.id', function($q) {
@@ -50,8 +50,7 @@ class AnimalTransactionalController extends Controller
                   ->where('primer_traslado', true);
             })
 			->leftJoin('animals', 'animals.reporte_id', '=', 'reports.id')
-			->groupBy('reports.id', 'reports.cantidad_animales')
-			->havingRaw('COUNT(animals.id) < COALESCE(reports.cantidad_animales, 1)')
+			->groupBy('reports.id')
 			->orderByDesc('reports.id')
 			->get(['reports.id']);
 
@@ -67,7 +66,6 @@ class AnimalTransactionalController extends Controller
             ->leftJoin('animal_conditions', 'animal_conditions.id', '=', 'reports.condicion_inicial_id')
             ->select([
                 'reports.id',
-                'reports.cantidad_animales',
                 'reports.imagen_url',
                 'reports.observaciones',
                 DB::raw('COUNT(animals.id) as asignados'),
@@ -75,8 +73,7 @@ class AnimalTransactionalController extends Controller
                 'reports.condicion_inicial_id',
                 DB::raw("COALESCE(animal_conditions.nombre, '') as condicion_nombre"),
             ])
-            ->groupBy('reports.id','reports.cantidad_animales','reports.imagen_url','reports.observaciones','people.nombre','reports.condicion_inicial_id','animal_conditions.nombre')
-            ->havingRaw('COUNT(animals.id) < COALESCE(reports.cantidad_animales, 1)')
+            ->groupBy('reports.id','reports.imagen_url','reports.observaciones','people.nombre','reports.condicion_inicial_id','animal_conditions.nombre')
             ->orderByDesc('reports.id')
             ->get();
 

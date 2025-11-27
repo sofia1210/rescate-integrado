@@ -88,7 +88,6 @@ class AnimalTransactionalService
 						'estado_id' => $animalFile->estado_id ?? null,
 						'tipo_id' => $animalFile->tipo_id ?? null,
 						'especie_id' => $animalFile->especie_id ?? null,
-						'arrived_count' => $animalData['llegaron_cantidad'] ?? null,
 						// estado inicial (desde condición del reporte si viene)
 						'estado_inicial_id' => $animalData['estado_inicial_id'] ?? null,
 					],
@@ -190,7 +189,6 @@ class AnimalTransactionalService
 				$storedPath = null;
 				$animalDataEach = $animalData;
 				// Para modo por cada, el arrived_count = 1 en el historial
-				$animalDataEach['llegaron_cantidad'] = 1;
 
 				$animal = Animal::create($animalDataEach);
 

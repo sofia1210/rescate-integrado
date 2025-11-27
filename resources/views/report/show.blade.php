@@ -49,9 +49,7 @@
                                 <div class="form-group mb-2 mb20">
                                     <strong>{{ __('¿Puede moverse?') }}:</strong> {{ is_null($report->puede_moverse) ? '-' : ($report->puede_moverse ? __('Sí') : __('No')) }}
                                 </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>{{ __('Cantidad de animales') }}:</strong> {{ $report->cantidad_animales ?? '-' }}
-                                </div>
+                                
                                 @if($report->firstTransfer?->center)
                                 <div class="form-group mb-2 mb20">
                                     <strong>{{ __('Traslado a') }}:</strong>

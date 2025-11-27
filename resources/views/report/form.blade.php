@@ -110,8 +110,6 @@
             <small id="observaciones_help" class="form-text text-muted">{{ __('Máximo 500 caracteres') }} · <span id="obs_counter">0</span>/500</small>
             {!! $errors->first('observaciones', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <!-- Campo cantidad oculto por simplicidad de UI (se usará valor por defecto en backend) -->
-        <input type="hidden" name="cantidad_animales" value="{{ old('cantidad_animales', $report?->cantidad_animales ?? 1) }}">
 
         @if(empty($report?->id))
         <div class="form-group mb-2 mb20">
