@@ -8,19 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // Tipos de animales
-        if (Schema::hasTable('animal_types')) {
-            if (!DB::table('animal_types')->where('nombre', 'Silvestre')->exists()) {
-                DB::table('animal_types')->insert([
-                    'nombre' => 'Silvestre',
-                    'permite_adopcion' => false,
-                    'permite_liberacion' => true,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
-            }
-        }
-
         // Tipos de cuidado
         if (Schema::hasTable('care_types')) {
             $now = now();
@@ -162,9 +149,6 @@ return new class extends Migration
     {
         // En down eliminamos solo los registros insertados por nombre para no borrar datos de producción.
 
-        if (Schema::hasTable('animal_types')) {
-            DB::table('animal_types')->where('nombre', 'Silvestre')->delete();
-        }
 
         if (Schema::hasTable('care_types')) {
             DB::table('care_types')->whereIn('nombre', ['Alimentación', 'Intensivo'])->delete();

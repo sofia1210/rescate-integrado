@@ -28,11 +28,7 @@
                                     <strong>Sexo:</strong>
                                     {{ $animalFile->animal?->sexo ?: '-' }}
                                 </div>
-                                <div class="form-group mb-2 mb20">
-                                    <strong>Tipo:</strong>
-                                    {{ $animalFile->animalType?->nombre ?? '-' }}
-                                </div>
-                                
+                                                                
                                 <div class="form-group mb-2 mb20">
                                     <strong>Especie:</strong>
                                     {{ $animalFile->species?->nombre ?? '-' }}

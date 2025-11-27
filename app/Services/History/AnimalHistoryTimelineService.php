@@ -14,7 +14,6 @@ use App\Models\Care;
 use App\Models\MedicalEvaluation;
 use App\Models\Person;
 use App\Models\Center;
-use App\Models\AnimalType;
 use App\Models\Species;
 use App\Models\Report;
 use App\Models\AnimalFile as AnimalFileModel;
@@ -291,7 +290,6 @@ class AnimalHistoryTimelineService
 						}
 					}
 					$estadoName = isset($af['estado_id']) ? (AnimalStatus::find($af['estado_id'])->nombre) : null;
-					$tipoName = isset($af['tipo_id']) ? (AnimalType::find($af['tipo_id'])->nombre) : null;
 					$espName = isset($af['especie_id']) ? (Species::find($af['especie_id'])->nombre) : null;
 					$item['details'][] = [
 						'label' => 'Detalle',

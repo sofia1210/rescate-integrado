@@ -14,17 +14,10 @@ class AnimalReleaseTransactionalService
 	public function create(array $data): Release
 	{
         return DB::transaction(function () use ($data) {
-            $animalFile = AnimalFile::with('animalStatus','animal','animalType')->findOrFail($data['animal_file_id']);
+            $animalFile = AnimalFile::with('animalStatus','animal')->findOrFail($data['animal_file_id']);
 
-            if ($animalFile->adoption()->exists()) {
-                throw new \DomainException('El animal ya fue adoptado; no puede ser liberado.');
-            }
             if ($animalFile->release()->exists()) {
                 throw new \DomainException('El animal ya tiene una liberación registrado.');
-            }
-
-            if (!$animalFile->animalType?->permite_liberacion) {
-                throw new \DomainException('Este tipo de animal no permite liberación.');
             }
 
             $statusName = mb_strtolower((string)($animalFile->animalStatus->nombre ?? ''));

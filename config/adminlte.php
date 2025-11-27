@@ -378,12 +378,6 @@ return [
             'url' => 'species',
             'icon' => 'fas fa-fw fa-paw',
         ],
-        /*[
-            'text' => 'Razas',
-            'url' => 'breeds',
-            'icon' => 'fas fa-fw fa-paw',
-        ],*/
-        
         ['header' => 'DIAGNOSTICO'],
         [
             'text' => 'Evaluaciones Médicas',
@@ -453,14 +447,6 @@ return [
             'url' => 'rescuers',
             'icon' => 'fas fa-fw fa-user-injured',
         ],
-        
-        /*[
-            'text' => 'Adopciones',
-            'url' => 'adoptions',
-            'icon' => 'fas fa-fw fa-paw',
-        ],*/
-        
-        
         ['header' => 'ADMINISTRACION'],
         [
             'text' => 'Personas',

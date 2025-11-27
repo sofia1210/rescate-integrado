@@ -7,10 +7,9 @@ use App\Http\Requests\Transactions\AnimalWithFileRequest;
 use App\Models\Animal;
 use App\Models\AnimalFile;
 use App\Models\AnimalStatus;
-use App\Models\AnimalType;
 use App\Models\Report;
 use App\Models\Species;
-	use App\Models\AnimalHistory;
+use App\Models\AnimalHistory;
 use App\Services\Animal\AnimalTransactionalService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -34,7 +33,6 @@ class AnimalTransactionalController extends Controller
 		$animalFile = new AnimalFile();
 
 		// Defaults
-		$wildTypeId = AnimalType::whereRaw('LOWER(nombre) = ?', ['silvestre'])->value('id');
 		$defaultStatusId = AnimalStatus::whereRaw('LOWER(nombre) = ?', ['en recuperación'])->value('id');
         // Default especie "Desconocido" en el formulario de hoja
         $unknownSpeciesId = Species::whereRaw('LOWER(nombre) = ?', ['desconocido'])->value('id');
@@ -83,7 +81,6 @@ class AnimalTransactionalController extends Controller
             ->get();
 
 		// Datos requeridos por el form de AnimalFile (salvo animales)
-		$animalTypes = AnimalType::orderBy('nombre')->get(['id','nombre']);
 		$species = Species::orderBy('nombre')->get(['id','nombre']);
 		$animalStatuses = AnimalStatus::orderBy('nombre')->get(['id','nombre']);
 
@@ -99,11 +96,9 @@ class AnimalTransactionalController extends Controller
 			'animal',
 			'animalFile',
 			'reports',
-			'animalTypes',
 			'species',
 			'animalStatuses',
 			'reportCards',
-            'wildTypeId',
             'defaultStatusId'
 		));
 	}
@@ -115,13 +110,8 @@ class AnimalTransactionalController extends Controller
 	{
 		try {
 			$animalData = $request->only(['nombre','sexo','descripcion','reporte_id','transfer_history_ids','llegaron_cantidad']);
-			$animalFileData = $request->only(['tipo_id','especie_id','raza_id','estado_id']);
+			$animalFileData = $request->only(['tipo_id','especie_id','estado_id']);
 			$image = $request->file('imagen');
-
-			// Forzar tipo Silvestre por defecto si no viene del formulario
-			if (empty($animalFileData['tipo_id'])) {
-				$animalFileData['tipo_id'] = AnimalType::whereRaw('LOWER(nombre) = ?', ['silvestre'])->value('id');
-			}
 
 			// Si no viene estado, mapear desde la condición inicial del reporte
 			if (empty($animalFileData['estado_id']) && !empty($animalData['reporte_id'])) {

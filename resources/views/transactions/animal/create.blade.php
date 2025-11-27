@@ -93,14 +93,10 @@
                                         </div>
                                         @include('animal-file.form', [
                                             'animalFile' => $animalFile ?? null,
-                                            'animalTypes' => $animalTypes ?? [],
                                             'species' => $species ?? [],
                                             'animalStatuses' => $animalStatuses ?? [],
                                             'showAnimalSelect' => false,
                                             'showSubmit' => false,
-                                            'hideType' => true,
-                                            'defaultTypeId' => $wildTypeId ?? null,
-                                            'hideBreed' => true,
                                             'hideState' => true
                                         ])
                                     </div>
