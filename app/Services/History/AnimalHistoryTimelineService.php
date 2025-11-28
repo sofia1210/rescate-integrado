@@ -295,7 +295,6 @@ class AnimalHistoryTimelineService
 						'label' => 'Detalle',
 						'value' => implode(' | ', array_filter([
 							$estadoName ? ('Estado: '.$estadoName) : null,
-							$tipoName ? ('Tipo: '.$tipoName) : null,
 							$espName ? ('Especie: '.$espName) : null,
 						])),
 					];

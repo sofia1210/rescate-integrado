@@ -50,7 +50,7 @@ class AnimalCareTransactionalController extends Controller
                     $em = $new['evaluacion_medica'];
                     $pieces = [];
                     if (!empty($em['diagnostico'])) {
-                        $pieces[] = 'Dx: '.$em['diagnostico'];
+                        $pieces[] = 'Diagnóstico: '.$em['diagnostico'];
                     }
                     if (!empty($em['tratamiento_texto'])) {
                         $pieces[] = $em['tratamiento_texto'];

@@ -31,7 +31,7 @@
                                 <h5 class="mb-2">{{ __('Paso 1: Seleccione el hallazgo') }}</h5>
                                 <div class="d-flex flex-wrap" id="report_cards">
                                     @foreach(($reportCards ?? []) as $rep)
-                                        <div class="card m-2 report-card" data-report-id="{{ $rep->id }}" data-available="{{ $available }}" data-cond-id="{{ $rep->condicion_inicial_id }}" data-cond-name="{{ $rep->condicion_nombre }}" data-obs="{{ e($rep->observaciones) }}" style="width: 200px; cursor: pointer;">
+                                        <div class="card m-2 report-card" data-report-id="{{ $rep->id }}" data-cond-id="{{ $rep->condicion_inicial_id }}" data-cond-name="{{ $rep->condicion_nombre }}" data-obs="{{ e($rep->observaciones) }}" style="width: 200px; cursor: pointer;">
                                             <div class="card-img-top mt-3" style="height:110px; overflow:hidden; display:flex; align-items:center; justify-content:center; ">
                                                 @if(!empty($rep->imagen_url))
                                                     <img src="{{ asset('storage/'.$rep->imagen_url) }}" alt="#{{ $rep->id }}" style="max-height:100%; max-width:100%;">
@@ -45,7 +45,7 @@
                                                     <div class="small">{{ __('Reportante') }}: {{ $rep->reportante_nombre }}</div>
                                                 @endif
                                                 <!--<div class="small text-muted">{{ __('Asignados') }}: {{ $rep->asignados }}</div>
-                                                <div class="small text-success">{{ __('Disp.') }}: {{ $available }}</div>-->
+                                                {{-- <div class="small text-success">{{ __('Disp.') }}: {{ $available }}</div> --}}-->
                                             </div>
                                         </div>
                                     @endforeach
